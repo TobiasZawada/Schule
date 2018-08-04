@@ -1,0 +1,1082 @@
+\documentclass{article}
+\ifx\RunningPreview\undefined
+\usepackage{hyperref}
+\fi
+\usepackage[fleqn]{amsmath}
+\usepackage{amsfonts}
+\usepackage{float}
+\usepackage[DIV15]{typearea}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{pstricks,pst-plot,pst-node,pst-circ}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\let\l\left\let\r\right\let\cs\csname\let\ecs\endcsname\let\ea\expandafter
+\let\eps\varepsilon
+\def\mdo#1{{\def\tmp{#1}\def\next{\relax}\ifx\tmp\next\else\def\next{\do{#1}\mdo}\fi\ea}\next}
+%%%%%%%%%% 
+\def\ddx#1{\frac{d#1}{dx}}
+\def\DDx#1{\frac{\Delta#1}{\Delta x}}
+\def\ddt#1{\frac{d#1}{dt}}
+\def\pdx#1{\frac{\partial #1}{\partial x}}
+\def\pdt#1{\frac{\partial #1}{\partial t}}
+\def\uuline#1{\underline{\underline{#1}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%% pst setup
+\def\euler{2.71828 }
+\psset{gridcolor=green,subgridcolor=yellow,gridwidth=0.1\pslinewidth,subgridwidth=0pt}
+\definecolor{lightblue}{rgb}{0.9 0.9 1.0}
+\SpecialCoor
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newtheorem{Def}{Definition}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\title{Differenzialquotient}
+\begin{document}
+\maketitle
+\tableofcontents
+\section{Einleitung}
+\label{sec:intro}
+Die \emph{Sekante}, die eine Kurve $f(x)$ an zwei vorgegebenen Stellen $x_1,x_2$ schneidet, ist die Gerade
+\begin{align}
+  g(x) &:= f(x_1) + \frac{f(x_2)-f(x_1)}{x_2-x_1}\cdot(x-x_1).\label{eq:intro:secant}
+\end{align}
+Als \emph{Tangente} an der Stelle $x_1$ wird diejenige Gerade
+bezeichnet, die sich als Grenzgerade bei Annäherung von $x_2$ an
+$x_1$ ergibt. Im Rahmen der Einleitung wollen wir uns mit dieser etwas
+vagen Andeutung und dem folgenden Beispiel zufrieden geben. In
+Abschnitt~\ref{sec:limit} gehen wir dann näher darauf ein, wie die
+Annäherung von $x_2$ an $x_1$ gemeint ist.
+
+\begin{figure}[H]
+  \psset{unit=1.5cm}
+  \begin{pspicture}(-2,-4)(9,5)
+    % \psgrid
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+    % General setup
+    \def\mypic#1{
+      \psaxes[Dx=0.5,Dy=0.5]{->}(0,0)(-1,-3)(2.5,4.5)[$x$,270][$y$,180]
+      \psplot{-1}{2}{ x x mul}
+      \rput(0.5,-3.5){#1}
+    }
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+    \mypic{{\color{blue}Differenz\textbf{en}quotient}}
+    % Anstieg: 2,
+    % Sekante:
+    % y = 2*x - 0.75
+    % xl = -1, yl = -2.75
+    % xr = 2, yr = 3.25
+    \psline[linecolor=blue](-1,-2.75)(2,3.25) % Sekante
+    {
+      % Maßlinien
+      \psset{linewidth=0.5\pslinewidth}
+      \psline(0.5,-1)(0.5,0.25)\rput[t](0.5,-1.1){$x_1$}
+      \psline(1.5,-1)(1.5,2.25)\rput[t](1.5,-1.1){$x_2$}
+      \pcline{->}(0.5,-0.8)(1.5,-0.8)\Aput{$\Delta x$}
+      \psline(0.5,0.25)(2.3,0.25)\rput[l](2.4,0.25){$y_1$}
+      \psline(1.5,2.25)(2.3,2.25)\rput[l](2.4,2.25){$y_2$}
+      \pcline{->}(2,0.25)(2,2.25)\Bput{$\Delta y$}
+    }
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+    \rput(5,0){
+      \mypic{{\color{red}Differenz\textbf{ial}quotient}}
+      % Anstieg: 2*0.5 = 1
+      % Tangente:
+      % xl = -1, yl = -1.25
+      % xr = 2, yr = 1.75
+      \psline[linecolor=red](-1,-1.25)(2,1.75) % Tangente
+      {
+        \psset{linewidth=0.5\pslinewidth}
+        \psline(0.5,-1)(0.5,0.25)\rput[t](0.5,-1.1){$x_1$}
+        \psline(1.5,-1)(1.5,1.25)\rput[t](1.5,-1.1){$x_1+\Delta x$}
+        \pcline{->}(0.5,-0.8)(1.5,-0.8)\Aput{$\Delta x$}
+        \psline(0.5,0.25)(2.3,0.25)\rput[l](2.4,0.25){$y_1$}
+        \psline(1.5,1.25)(2.3,1.25)
+        \pcline{->}(2,0.25)(2,1.25)\Bput{$\Delta y = \ddx{f}(x_1)\cdot \Delta x$}
+      }
+    }
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  \end{pspicture}
+  \caption{Differenzenquotient als Anstieg der Sekanten und Differenzialquotient als Anstieg der Tangenten}
+  \label{fig:differenceQuotientAndDerivative}
+\end{figure}
+
+In Abbildung~\ref{fig:differenceQuotientAndDerivative} ist zweimal die quadratische Funktion
+\begin{align*}
+  y&=f(x) := x^2
+\end{align*}
+dargestellt.
+Die Sekante, die den Graph von $f$ an den Stellen
+$x_1=0.5$ und $x_2=1.5$ schneidet, ist blau eingezeichnet und rot die
+Tangente an der Stelle $x_1$.
+
+Der Anstieg der Sekante ergibt sich aus dem Differenzenquotient
+\begin{align*}
+  \frac{\Delta f}{\Delta x}(x_1,x_2) &= \frac{f(x_2)-f(x_1)}{x_2-x_1}
+\end{align*}
+Lässt man die Differenz $\Delta x=x_2-x_1$ betragsmäßig immer kleiner
+werden, nähert sich der Differenzenquotient immer mehr dem Anstieg der
+Tangenten, der als \emph{Differenzialquotient} $\ddx{f}(x_1)$ an der
+Stelle $x_1$ bezeichnet wird.
+
+Gleichungen mit Differenzialquotienten heißen \emph{Differenzialgleichungen}.
+
+Interpretiert man die x-Achse als Zeit und die y-Achse als Weg, so ist
+der Differenzenquotient $\frac{y_2-y_1}{x_2-x_1}$ die
+Durchschnittsgeschwindigkeit im Zeitintervall von $x_1$ bis $x_2$ und
+der Differenzialquotient $\ddx f(x_1)$ ist die Momentangeschwindigkeit
+zum Zeitpunkt $x_1$.
+
+Fast alle physikalischen Erscheinungen lassen sich durch Differenzialgleichungen beschreiben. In den folgenden Unterabschnitten wollen wir uns einige wenige Beispiele anschauen.
+\subsection{Mechanik}
+Mit der Federkonstante $k$ und der entspannten Länge $l$ einer Feder ergibt sich die Federkraft aus der Gleichung
+\begin{align*}
+  F(x) &= k(l-x).
+\end{align*}
+Die Beschleunigung $a(t)$ eines Körpers mit der Masse $m$ zur Zeit $t$ ergibt sich mit der auf den Körper momentan einwirkenden Kraft $F(t)$ aus der Gleichung
+\begin{align*}
+  m\cdot a(t) &=F(t).
+\end{align*}
+Die Beschleunigung ist dabei als momentane Änderung der Geschwindigkeit $v(t)$, also als Differenzialquotient
+\begin{align*}
+  a(t) &= \ddt{v}(t)
+\end{align*}
+zu interpretieren und die Geschwindigkeit ist die momentane Änderung
+\begin{align*}
+  v(t) &= \ddt{x}(t)
+\end{align*}
+des Ortes $x(t)$. So ergibt sich für die Kombination des Körpers mit der Feder das Differenzialgleichungssystem
+\begin{align*}
+  m\cdot \ddt v(t) &= k(l-x(t)),\\
+  \ddt x(t) &= v(t).
+\end{align*}
+\subsection{Thermodynamik}
+Wir betrachten eine sehr lange Metallstange die wir mit einer
+Ortsvariable $x$ koordinatisieren. Um das Beispiel einfach zu halten
+interessieren wir uns erst einmal nicht für die Enden der Stange und
+nehmen an, dass $x$ von $-\infty$ bis $+\infty$ läuft.
+
+Die Stange habe eine von der Koordinate $x$ unabhängige
+Querschnittsfläche $A$, eine Dichte $\rho$ und eine Wärmekapazität
+$c$.
+
+Wir nehmen an, dass zum Anfangszeitpunkt $t=0$ der Temperaturverlauf
+$T_0(x)$ gegeben ist und interessieren uns zu jedem Zeitpunkt $t> 0$
+für den Temperaturverlauf $T(x,t)$ an allen Stellen $x$ der Stange.
+
+Der \emph{Wärmestrom} $\dot q(x,t)$ ist die Wärme, die pro Zeiteinheit
+durch die Querschnittsfläche $A$ an der Stelle $x$ in positiver
+$x$-Richtung strömt.
+
+Die Wärme fließt immer von Punkten höherer Temperatur zu Punkten
+niedrigerer Temperatur. Je höher die Temperaturdifferenz ist, desto
+größer ist der Wärmestrom.
+
+\begin{figure}[H]
+  \centering
+  \begin{pspicture}(-4,-2)(4,5)
+    % \psgrid
+    \definecolor{lightgrey}{rgb}{0.95 0.95 0.95}
+    \psline[linewidth=3\pslinewidth](-2.5,-1)(2.5,-1)
+    \psline[linewidth=3\pslinewidth](-2.5,1)(2.5,1)
+    \psframe[linestyle=none,fillstyle=solid,fillcolor=lightgrey](-2.5,-1)(2.5,1)
+    \psline{->}(-3,0)(3,0)
+    \rput[tl](3,0){$x$}
+    \psline(-1.5,-1)(-1.5,1)\psline[linestyle=dashed](-1.5,1)(-1.5,4.5)
+    \rput[tr](-1.5,-0.1){$x_1$}
+    \psline(1.5,-1)(1.5,1)\psline[linestyle=dashed](1.5,1)(1.5,4.5)
+    \rput[tr](1.5,-0.1){$x_2$}
+    \psline{->}(-1.5,0.2)(-1,0.2)\rput[bl](-1,0.2){$\dot q(x_1,t)$}
+    \psline{->}(1.5,0.2)(2,0.2)\rput[bl](2,0.2){$\dot q(x_2,t)$}
+    \def\myshift{1.2 }
+    \def\myscale{1.5 }
+    \def\fun{ \myshift sub \myscale div dup mul neg \euler exch exp }
+    \rput(0,3){
+      \psaxes{->}(0,0)(-3.5,-1.5)(3.5,1.5)[$x$,270][$T$,180]
+      \psplot{-3}{3}{x \fun}
+      \rput(!-1.5 -1.5 \fun){\psline[linecolor=blue](0,0)(1;!-1.4\fun-1.5\fun sub 0.1 atan)}
+      \rput(!1.5 1.5 \fun){\psline[linecolor=red](0,0)(1;!1.6 \fun 1.5 \fun sub 0.1 atan)}      
+      \rput[br](-1.6,0.2){$\pdx T(x_1,t)$}
+      \rput[bl](1.6,1){$\pdx T(x_2,t)$}
+    }
+  \end{pspicture}
+  \caption{Wärmeleitung in einer unendlich langen Metallstange; Unten: Ausschnitt der Metallstange; Oben: Temperaturverlauf entlang des Ausschnitts zusammen mit Tangentenausschnitten für den Temperaturanstieg $\pdx{T}(x,t)$ an den Stellen $x=x_1$ und $x=x_2$}
+  \label{fig:heatFlow}
+\end{figure}
+Physikalische Messungen zeigen, dass der Wärmestrom direkt
+proportional zum Temperaturgefälle $-\pdx T(x,t)$ ist. Der
+Differenzialquotient mit dem geschwungenen $\partial$ heißt
+\emph{partielle Ableitung} und bedeutet, dass alle Größen, nach denen
+nicht differenziert wird, während des Differenzierens konstant zu
+halten sind.  Die Proportionalitätskonstante $k$ ist nur vom Material
+und von der Querschnittsfläche abhängig. Wir erhalten also für den
+Wärmefluss die Gleichung
+\begin{align}
+  \dot q(x,t) &= -k\cdot \pdx T(x,t).\label{eq:thermDyn:heatCond}
+\end{align}
+Betrachten wir ein kurzes Stück der Stange, das von $x_1$ bis $x_2$
+geht (mit $x_1 < x_2$, siehe Abbildung~\ref{fig:heatFlow}). Die Länge
+dieses Stücks ist $\Delta x:=x_2-x_1$.
+
+Für eine Erhöhung der Temperatur $\bar T(x_1,x_2,t)$ des Stückchens um
+$\Delta\bar T$ wird die Wärmemenge
+\begin{align*}
+  \Delta Q&= \underbrace{A\cdot \Delta x}_{\text{\phantom{V}\pnode{V}}} \cdot \rho\cdot c\cdot \Delta \bar T(x_1,x_2,t)
+            \rput(V){\text{\small Volumen}}
+\end{align*}
+benötigt. Wie in Abbildung~\ref{fig:heatFlow} ersichtlich ist, fließt
+der Wärmestrom $\dot q(x_1,t)$ in den Abschnitt $[x_1,x_2]$ hinein,
+während $\dot q(x_2,t)$ aus dem Abschnitt herausfließt. Für eine über
+das Stückchen gemittelte momentane Temperaturänderung
+$\pdt{\bar T}(x_1,x_2,t)$ ist ein Wärmestrom
+\begin{align*}
+  \dot q(x_1,t) - \dot q(x_2,t) &= A\cdot \Delta x\cdot \rho\cdot c\cdot \pdt{\bar T}(x_1,x_2,t)
+\end{align*}
+erforderlich. Division durch $\Delta x$ und Berücksichtigung von
+$x_2=x_1+\Delta x$ liefert
+\begin{align*}
+  -\frac{\dot q(x_1+\Delta x,t) - \dot q(x_1,t)}{\Delta x} &= A\cdot \rho\cdot c\cdot \pdt{\bar T}(x_1,x_2,t).
+\end{align*}
+Auf der linken Seite taucht der Differenzenquotient des Wärmeflusses
+bzgl. $x$ auf.  Lassen wir noch $\Delta x$ gegen null streben, so
+erhalten wir
+\begin{align}
+  -\pdx{\dot q}(x_1,t) &= A\cdot \rho \cdot c\cdot \pdt{T}(x_1,t).\label{eq:thermDyn:heatStorage}
+\end{align}
+Dabei haben wir berücksichtigt, dass die über das Intervall
+$[x_1,x_2]$ gemittelte Temperatur $\bar T(x_1,x_2,t)$ gegen die
+Temperatur $T(x_1,t)$ an der Stelle $x_1$ strebt, wenn $x_2$ gegen
+$x_1$ strebt.
+
+Da wir in der Formel nicht mehr zwischen den zwei Koordinaten
+$x_1,x_2$ unterscheiden müssen ($x_2$ strebt ja gegen $x_1$), können
+wir auch einfach wieder $x$ schreiben und die zwei Gleichungen
+\eqref{eq:thermDyn:heatCond} und \eqref{eq:thermDyn:heatStorage} zum
+folgenden System zusammenfassen:
+\begin{align*}
+  \dot q(x,t) &= -k \pdx{T}(x,t),\\
+  -\pdx{\dot q}(x,t) &= A\cdot \rho \cdot c\cdot \pdt{T}(x,t).
+\end{align*}
+Dieses (partielle) Differenzialgleichungssystem beschreibt die
+Wärmeleitung in der Metallstange. Um dir noch einen Anfasser für eine
+eventuelle Literaturrecherche zu geben sei hier ohne weitere
+Erläuterung erwähnt, dass die zwei partiellen Differenzialgleichungen
+oft zur \emph{Wärmeleitungsgleichung}
+$a\frac{\partial^2 T}{\partial x^2}(x,t) = \pdt{T}(x,t)$ mit
+$a=\frac{k}{A\rho c}$ zusammengefasst werden.
+\subsection{Elektrotechnik}
+Die Spannung $U$ über einem Kondensator ist proportional zu der auf
+ihm gespeicherten Ladung $Q$. Der Proportionalitätsfaktor ist die
+Kapazität $C$ und die Gleichung für die Spannung am Kondensator lautet
+\begin{align}
+  C\cdot U &= Q
+             \label{eq:electrics:cap:U}
+\end{align}
+Die momentane Erhöhung der Ladung~$\ddt Q(t)$ auf dem
+Kondensator ist gleich dem Ladungsträgerzufluss, also dem Strom
+$I(t)$, der am positiven Anschluss in den Kondensator hineinfließt:
+\begin{align}
+  I(t) &= \ddt Q(t)
+         \label{eq:electrics:cap:I}
+\end{align}
+In Abschnitt~\ref{sec:linearity} sehen wir, dass konstante
+Linearfaktoren bei der Differenzation einfach herausgezogen werden
+können. So wird aus~\eqref{eq:electrics:cap:U} die Gleichung
+\begin{align*}
+  C\cdot \ddt U(t) &=\ddt Q(t)
+\end{align*}
+und mit~\eqref{eq:electrics:cap:I}
+\begin{align}
+  C\cdot \ddt U(t) &= I(t).
+                     \label{eq:electricity:cap:UI}
+\end{align}
+Betrachten wir nun den Stromkreis in Abbildung~\ref{fig:electricity:cap} mit einer Spannungsquelle $B$ mit Quellspannung $U_B$, z.B. einer Batterie, einemWiderstand mit Widerstandswert $R$ und einem Kondensator mit Kapazität $C$.
+\begin{figure}[H]
+  \centering
+  \begin{pspicture}(-1,-1)(4,5)
+    \psset{tensionlabeloffset=1.5cm}
+    % \psgrid
+    \pnodes(0,0){gndA}(0,3){pSupply}(3,3){pC}(3,0){gndB}
+    \battery[tension,tensionlabel=$U_B$](pSupply)(gndA){B}
+    \resistor[tension,tensionlabel=$U_R$](pSupply)(pC){$R$}
+    \capacitor[tension,tensionlabel=$U_C$,intensity,intensitylabel=$I$](pC)(gndB){$C$}
+    \ncline{gndA}{gndB}
+  \end{pspicture}
+  \caption{Stromkreis aus Spannungsquelle, Widerstand und Kondensator}
+  \label{fig:electricity:cap}
+\end{figure}
+Das Kirchhoffsche Stromgesetz gibt vor, dass durch alle drei Bauelemente der gleiche Strom, nämlich $I$ fließt.
+Aus dem Kirchhoffschen Spannungsgesetz folgt die Maschengleichung
+\begin{align*}
+  0 &= -U_B + U_R(t) + U_C(t)
+\end{align*}
+Mit dem Ohmschen Gesetz $U_R = R\cdot I$ für den Widerstand erhält man daraus die Gleichung
+\begin{align*}
+  0 &= -U_B + R\cdot I(t) + U_C(t)\\
+  I(t) &= \frac{U_B-U_C(t)}R
+\end{align*}
+Einsetzen dieser Gleichung in die Strom-Spannungsrelation~\eqref{eq:electricity:cap:UI} für den Kondensator liefert
+\begin{align}
+  C\ddt{U_C}(t) &= \frac{U_B-U_C(t)}{R}\notag\\
+  \tau \ddt{U_C}(t) &= U_B-U_C(t)\label{eq:intro:et:dgl}
+\end{align}
+mit der \emph{Zeitkonstante} $\tau:=RC$. Die letzte Gleichung ist eine Differenzialgleichung für $U_C(t)$. Bei ihr hängt der Anstieg $\ddt {U_C}(t)$ vom Momentanwert $U_C(t)$ ab. Je weiter sich $U_C(t)$ dem Endwert $U_B$ nähert, desto kleiner wird der Anstieg (siehe Abbildung~\ref{fig:electricity:chargingCurve}).
+\begin{figure}[H]
+  \centering
+  \psset{unit=2cm}
+  \begin{pspicture}(-0.5,-0.5)(3.25,1.5)
+    % \psgrid
+    \psaxes{->}(0,0)(3.25,1.25)[$t/{\rm s}$,270][$({\color{red}U_C};{\color{green}U_B})/{\rm V}$,180]
+    \psplot[linecolor=red,linewidth=2\pslinewidth]{0}{3}{1 \euler x neg exp sub}
+    \psline[linecolor=green](0,1)(3,1)
+    {
+      \psset{linecolor=blue}
+      \psline(0,0)(1,1)
+      \psline(1,0)(1,1)
+      \psline(0,0)(1,0)
+      \def\myy{1 1 \euler div sub }
+      \psline(! 1 \myy)(2,1)
+      \psline(! 1 \myy)(! 2 \myy)
+      \psline(! 2 \myy)(2,1)
+      \def\myy{1 \euler -2 exp sub }
+      \psline(! 2 \myy)(3,1)
+      \psline(! 2 \myy)(! 3 \myy)
+      \psline(! 3 \myy)(3,1)
+    }
+  \end{pspicture}
+  \caption{Zeitverlauf von $U_C(t)$ (bei $\tau=1\rm s$ und $U_B=1\rm V$); In jedem Punkt von $U_C$ ist der Anstieg der Kurve so groß wie der Abstand des Momentanwertes vom Endwert $U_B$. Zur Verdeutlichung sind drei Anstiegsdreiecke blau eingezeichnet.}
+  \label{fig:electricity:chargingCurve}
+\end{figure}
+\section{Grenzwerte}
+\label{sec:limit}
+\subsection{Differenzialquotient als Grenzwert von Differenzenquotienten}
+\label{sec:limit:ddx}
+Aus~\eqref{eq:intro:secant} kennen wir bereits die Gleichung für die
+Sekante, die an den Stellen $x_1$ und $x_2$ eine Kurve $f(x)$
+schneidet. Der Anstieg der Sekante ist
+\begin{align}
+  \frac{\Delta f}{\Delta x}(x_1,x_2) &= \frac{f(x_2)-f(x_1)}{x_2-x_1}
+                                       \label{eq:limit:secant:slope}
+\end{align}
+Außerdem wurde in Abschnitt~\ref{sec:intro} erwähnt, dass die Tangente die Grenzgerade bei Annäherung von $x_2$ an $x_1$ ist.
+
+Den Anstieg $\ddx f(x)$ der Tangente an der Stelle $x_1$ können wir jedoch nicht direkt aus Gleichung~\eqref{eq:limit:secant:slope} berechnen, da für $x_2=x_1$ der Nenner null wird.
+
+Finden wir stattdessen eine Zahl $\ddx f(x_1)$, der sich der Sekantenanstieg~\eqref{eq:limit:secant:slope} annähert, wenn $x_2$ an $x_1$ heranrückt?
+Wie ist dabei "`annähern"' zu verstehen?
+
+Wir können den Differenzenquotienten~\eqref{eq:limit:secant:slope} nur
+an Stellen $x_2$ ungleich $x_1$ auswerten und müssen deshalb bei jeder
+konkreten Auswertung von $\frac{\Delta f}{\Delta x}(x_1,x_2)$ eine
+absolute Abweichung
+$|\ddx f(x_1) - \frac{\Delta f}{\Delta x}(x_1,x_2)|$ größer Null
+zulassen.
+
+\begin{Def}
+  Wir definieren eine Zahl $\ddx f(x_1)$ als \emph{Grenzwert} von
+  $\DDx f(x_1,x_2)$ bei Annäherung von $x_2$ an $x_1$, falls für jede
+  (beliebig knapp über Null liegende) Fehlertoleranz $\eps>0$ die
+  Abweichung $|\ddx f(x_1) - \frac{\Delta f}{\Delta x}(x_1,x_2)|$
+  nicht größer als $\eps$ wird, wenn wir uns auf Stellen $x_2$
+  ungleich $x_1$ beschränken, die einen (von $\eps$ abhängigen)
+  Maximalabstand $\delta$ von $x_1$ haben.
+\end{Def}
+
+Als Beispiel ermitteln wir die Ableitung von $f(x)=x^2$ an der Stelle $x=x_1:=0.5$.
+
+Für $x_2\neq x_1$ gilt
+\begin{align}
+  \DDx f(x_1,x_2) = \frac{x_2^2 - x_1^2}{x_2-x_1} = \frac{(x_2-x_1)(x_2+x_1)}{x_2-x_1}= x_2 + x_1
+  \label{eq:limit:DDxf}
+\end{align}
+Im Zähler kam die binomische Formel $x_2^2-x_1^2=(x_2-x_1)(x_2+x_1)$ zum Einsatz.
+Bei der Rechnung hebt sich danach der Nenner $x_2-x_1$ heraus. Die rechte
+Seite ist frei von Divisionen, problemlos an der Stelle $x_2=x_1$
+auswertbar und man erhält für sie an dieser Stelle $2 x_1$.
+
+Wir vermuten also, dass
+\begin{align}
+  \ddx f(x_1) &= 2x_1
+                \label{eq:limit:ddxf}
+\end{align}
+die Ableitung von $f(x)=x^2$ an der Stelle $x=x_1$ ist.
+
+Wir prüfen ob $\ddx f(x_1)=2x_1$ der obigen Definition für den
+Grenzwert von $\DDx f(x_1,x_2)$ bei Annäherung von $x_2$ an $x_1$ standhält.
+
+Wir geben uns eine beliebig knapp über Null liegende Fehlertoleranz
+$\eps>0$ vor und schauen, ob wir einen Maximalabstand $\delta>0$
+finden, so dass für alle $x_2$, die keinen größeren Abstand von $x_1$
+haben, die also $|x_2-x_1|\leq \delta$ erfüllen, die Relation
+\begin{align*}
+  \l|\ddx f(x_1) - \DDx f(x_1,x_2)\r| \leq \eps
+\end{align*}
+erfüllt ist. Einsetzen von \eqref{eq:limit:DDxf} und \eqref{eq:limit:ddxf} liefert die Ungleichung
+\begin{align*}
+  | \underbrace{2 x_1}_{\ddx f(x_1)} - \underbrace{(x_2 + x_1)}_{\DDx f(x_1,x_2)} | \leq \eps,
+\end{align*}
+die nach Vereinfachung in die folgende Relation übergeht:
+\begin{align*}
+  | x_1 - x_2 | \leq \eps
+\end{align*}
+Wie wir an dieser Ungleichung sehen, können wir im Beispiel $f(x)=x^2$
+einfach den Maximalabstand $\delta = \eps$ nutzen. Somit ist die
+Voraussetzung aus obiger Definition erfüllt und $\ddx f(x_1) = 2x_1$
+ist der Grenzwert von $\DDx f(x_1,x_2)$ bei Annäherung von $x_2$ an
+$x_1$.
+
+In Abbildung~\ref{fig:limit:ddxf} sind zur Veranschaulichung bei
+$f(x)=x^2$ die Grenzsekanten für die Fehlertoleranz $\eps=0.5$
+eingetragen.  Bei dieser Fehlertoleranz ergibt sich ein möglicher
+Maximalabstand $|x_2-x_1|=0.5$ und $x_2$ kann im Intervall von
+$x_2=0$ bis $x_2=1$ gewählt werden.
+\begin{figure}[H]
+  \centering
+  \psset{unit=1.5cm}
+  \begin{pspicture}(-2,-4)(3,5)
+    % \psgrid
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+    % General setup
+    \pspolygon[linestyle=none,fillstyle=solid,fillcolor=lightblue](-1,-0.5)(2,1)(2,2.5)(-1,-2)
+    \psaxes[Dx=0.5,Dy=0.5]{->}(0,0)(-1,-3)(2.5,4.5)[$x$,270][$y$,180]
+    \psplot{-1}{2}{ x x mul}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+    % Anstieg: 2*0.5 = 1
+    % Tangente:
+    % xl = -1, yl = -1.25
+    % xr = 2, yr = 1.75
+    \psline[linecolor=red](-1,-1.25)(2,1.75) % Tangente
+    % Fehlergrenzen für Fehlertoleranz tol = 0.5
+    % x = 0.5
+    % y = 0.5^2 = 0.25
+    % Anstieg Fehlergrenze: 0.5
+    % Geradengleichung: y = 0.25 + 0.5*(x-0.5) = 0.5*x
+    % xl = -1, yl = -0.5
+    % xr = 2, yr = 1
+    % Anstieg Fehlergrenze: 1.5
+    % Geradengleichung: y = 0.25 + 1.5*(x-0.5) = -0.5 + 1.5*x
+    % xl = -1, yl = -2
+    % xr = 2, yr = 2.5
+    \psline[linecolor=blue](-1,-0.5)(2,1)
+    \psline[linecolor=blue](-1,-2)(2,2.5)
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+    \psset{linewidth=0.5\pslinewidth}
+    \psline(1,0)(1,1)
+    \psline(0.5,0)(0.5,0.25)
+  \end{pspicture}
+  \caption{Rot: Tangente für $f(x_1)=x_1^2$ im Punkt $x_1=0.5$; Blau: Bereich der Sekanten mit einer Fehlertoleranz von $\eps=0.5$ für die Abweichung des Differenzenquotienten $\DDx f(x_1,x_2)$ von der Tangente $\ddx f(x_1)$; Der Maximalabstand $|x_2-x_1|=0.5$ erlaubt Sekanten mit $x_2$ im Intervall von $x_2=0$ bis $x_2=1$.}
+  \label{fig:limit:ddxf}
+\end{figure}
+\subsection{Allgemeinerer Grenzwertbegriff}
+
+Der Grenzwertbegriff ist nicht nur auf Differenzialquotienten anwendbar, sondern auf beliebige reelle Funktionen $f(x)$.
+
+\begin{Def}
+  Eine reelle Funktion $f(x)$ mit einem reellen Argument $x$ strebt
+  bei Annäherung von $x$ an eine Stelle $X$ gegen einen Grenzwert $F$,
+  falls es für jede positive Fehlerschranke $\varepsilon>0$ einen
+  Maximalabstand $\delta>0$ gibt, so dass für alle von $X$
+  verschiedene Argumente $x$, die nicht weiter als $\delta$ von $X$
+  entfernt sind, die Abweichung des Funktionswertes $f(x)$ vom
+  Grenzwert $F$ nicht größer als die vorgegebene Fehlerschranke
+  $\varepsilon$ ist, d.h., $|f(x)-F| \leq \varepsilon$ gilt.
+\end{Def}
+Als erstes Beispiel schauen wir uns den Grenzwert von
+$f(x):=x\cdot \sin\l(\frac1x\r)$ bei Annäherung von $x$ an $0$
+an. Aufgrund der Division durch $x$ ist $f(x)$ nicht an der Stelle
+$x=0$ auswertbar.
+
+Jedoch wird der Betrag von $\sin\l(\frac1x\r)$ nicht größer als
+$1$. Damit ist der Betrag von $f(x)=x\cdot\sin\l(\frac1x\r)$ durch
+$|x|$ beschränkt. Da $|x|$ bei Annäherung von $x$ an 0 den Grenzwert
+$0$ hat, erwarten wir dass bei $|f(x)|$ auch der Fall ist.  Geben wir
+uns eine beliebig knapp über 0 liegende Fehlerschranke $\eps$ vor und
+untersuchen, für welchen Maximalabstand $\delta$ wir absichern können,
+dass die Abweichung $|f(x)|$ nicht größer als $\eps$ wird.
+\begin{align*}
+  |f(x)-F| &= \l|x\cdot\sin\l(\frac1x\r) - 0\r|\\
+           &\leq|x|\l|\sin\l(\frac1x\r)\r|\\
+           &\leq |x|
+\end{align*}
+Wir können also die maximale Abweichung $\delta$ für $|x|$ gleich der
+vorgegebenen Fehlerschranke $\eps$ wählen, damit diese nicht von
+$\l|x\cdot\sin\l(\frac1x\r)\r|$ überschritten wird. Im linken Teil der
+Abbildung~\ref{fig:limit:sin1x} ist als Beispiel die Fehlerschranke
+$\eps=0.5$ vorgegeben und gezeigt, dass diese Fehlerschranke für
+$x$-Werte im Intervall von $-0.5$ bis $0.5$ nicht überschritten wird.
+\begin{figure}[H]
+  \centering
+  \psset{unit=3cm}
+  \begin{pspicture}(-1.25,-1.25)(1.25,1.25)
+    % \psgrid
+    \psframe[linestyle=none,fillstyle=solid,fillcolor=lightblue](-0.5,-0.5)(0.5,0.5)
+    \psaxes[Dx=0.5,Dy=0.5]{->}(0,0)(-1.25,-1.25)(1.25,1.5)[$x$,270][$y$,180]
+    \psline[linecolor=gray](-1,-1)(1,1)
+    \psline[linecolor=gray](-1,1)(1,-1)
+    \def\myplot#1{
+      \parametricplot[plotpoints=1000,linecolor=red]{1}{100.0}{
+        1.0 t #1 div dup
+        t #1 57.29 mul sin
+        mul}}
+    \myplot{}
+    \myplot{neg}
+    \rput[lb](-0.5,0.6){$\eps=0.5$}
+    \rput[lt](0.55,-0.25){$\delta=0.5$}
+  \end{pspicture}\quad
+  \begin{pspicture}(-1.25,-1.25)(1.25,1.25)
+    \psframe[linestyle=none,fillstyle=solid,fillcolor=lightblue](-1,-0.5)(1,0.5)
+    \psaxes{->}(0,0)(-1.25,-1.25)(1.25,1.5)
+    \def\myplot#1{
+      \parametricplot[plotpoints=1000,linecolor=red]{1}{100.0}{
+        1.0 t #1 div
+        t #1 57.29 mul sin
+      }}
+    \myplot{}
+    \myplot{neg}
+    \rput[lb](-1,0.55){$\eps=0.5$}
+  \end{pspicture}
+  \caption{Links: Graph von $f(x)=x\cdot\sin\l(\frac1x\r)$; Rechts: Graph von $f(x)=\sin\l(\frac1x\r)$}
+  \label{fig:limit:sin1x}
+  % calc: 180/pi
+  % ans:57.2957795131
+\end{figure}
+Als zweites Beispiel schauen wir uns die Funktion
+$f(x)=\sin\l(\frac1x\r)$ an, die ebenfalls bei 0 nicht auswertbar ist.
+
+Egal wie knapp über Null wir die maximale Abweichung $\delta$ wählen,
+in dem Intervall von 0 bis $\delta$ liegen immer noch unendlich viele
+Minimalstellen $\check x$ mit $\sin\l(1/\check x\r)=-1$ und unendlich
+viele Maximalstellen $\hat x$ mit $\sin\l(1/\hat x\r)$.  Zur
+Konstruktion jeweils einer dieser Stellen wählt einfach eine
+hinreichend große natürliche Zahl $n$ mit $\frac1{2\pi n} \leq \delta$
+und nutzt $\check x := \frac1{2\pi n +3\pi/4}$ beziehungsweise
+$\hat x := \frac1{2\pi n +\pi/4}$. Alle größeren natürlichen Zahlen
+$m>n$ liefern mit der selben Konstruktion weitere Minimalstellen und
+Maximalstellen für $\sin(1/x)$ mit Abstand von Null, der kleiner als
+der vorgegebene Abstand $\delta$ ist.
+
+Jeder Versuch einen Grenzwert $F$ für $f$ bei Annäherung von $x$ an 0
+zu konstruieren scheitert, denn diese Zahl $F$ hätte entweder bei
+einem lokalen Minimum oder bei einem lokalen Maximum einen Abstand von mindestens $0.5$.
+
+\subsection{Grenzwertsätze}
+\label{sec:limit:theorems}
+Seien $\alpha$ und $\beta$ zwei reelle Konstanten.  Konvergieren zwei
+Funktionen $f(x)$ und $g(x)$ bei Annäherung von $x$ an eine Stelle $X$
+gegen Grenzwerte $F$ beziehungsweise $G$, so konvergieren auch
+$f(x)\cdot g(x)$ und $\alpha\cdot f(x)+\beta\cdot g(x)$ gegen
+$F\cdot G$ beziehungsweise $\alpha F +\beta G$.
+
+\paragraph{Produkt}
+Konvergieren zwei Funktionen $f(x)$ und $g(x)$ bei Annäherung von $x$
+an eine Stelle $X$ gegen Grenzwerte $F$ beziehungsweise $G$, so
+konvergiert auch $f(x)\cdot g(x)$ gegen $F\cdot G$ beziehungsweise
+$\alpha F +\beta G$.
+
+Wir geben uns zunächst eine Fehlerschranke $\bar\eps>0$ für $f$ und
+$g$ als Variable vor.  In Abhängigkeit von $\bar\eps$ finden wir eine
+Formel für eine Schranke $\eps$ der Abweichung des Produkts $f(x)g(x)$
+vom Grenzwertprodukt $FG$. Wir stellen diese Formel dann nach
+$\bar\eps$ um, so dass wir $\eps$ vorgeben können, daraus $\bar\eps$
+berechnen können und mit $\bar\eps$ dann den maximalen Abstand
+$\delta$ ermitteln.
+
+Um die Voraussetzungen $|f(x)-F|\leq\bar\eps$ und
+$|g(x)-G|\leq\bar\eps$ anwenden zu können, addieren wir in
+$|f(x)g(x)-FG|$ den Term $f(x)G$ und ziehen ihn gleich wieder ab. Das
+ändert nichts am Wert unter dem Betragszeichen.
+\begin{align*}
+  \l|f(x) g(x) - FG\r| &= \l|f(x) g(x) - f(x)G + f(x)G - FG\r|
+\end{align*}
+Durch Ausklammern von $f(x)$ und $G$ gewinnen wir die Terme $f(x)-F$ und $g(x)-G$:
+\begin{align*}
+  &=\bigl|f(x)\cdot(g(x) - G) + (f(x)-F)\cdot G\bigr|
+\end{align*}
+Jetzt verwenden wir die für Summen allgemeingültige Abschätzung
+$|a+b| \leq |a|+|b|$ um den Betrag der Summe in eine Summe von
+Beträgen aufzusplitten.
+\begin{align*}
+  &\leq \l|f(x)\cdot(g(x) - G) \r| + \l|(f(x) - F)\cdot G\r|
+\end{align*}
+Bei Beträgen von Produkten ist es egal, ob man zuerst multipliziert
+oder zuerst die Beträge bildet, d.h., es gilt allgemein
+$|a\cdot b|=|a|\cdot |b|$, was wir auch zur Umformung der letzten Formel ausnutzen.
+\begin{align*}
+  &= |f(x)|\cdot |g(x)-G|+ \l|f(x) - F\r|\cdot|G|
+\end{align*}
+Bis auf $|f(x)|$ haben wir durch den bekannten Wert $G$ und die
+vorgegebenen Fehlertoleranzen für $|g(x)-G|$ und $|f(x)-F|$ für alle
+Beträge in der letzten Formel Abschätzungen.  Um auch $|f(x)|$
+abschätzen zu können, fügen wir unter dem Betragszeichen $-F+F$
+hinzu. In dem entstehenden Term $|f(x)-F+F|$ können wir $|f(x)-F|$ und
+$|F|$ abschätzen.
+\begin{align*}
+  &= |f(x)-F+F|\cdot |g(x) - G | + |f(x)-F|\cdot |G|\\
+  &\leq (\bar\eps + |F|)\cdot\bar\eps + \bar\eps |G|=:\eps.
+\end{align*}
+Letztendlich erhalten wir eine Gleichung mit der wir aus der
+Fehlertoleranz $\bar\eps$ für $f$ und $g$ eine Fehlertoleranz $\eps$
+für das Produkt $f\cdot g$ berechnen können.
+
+Wir können auch $\eps$ vorgeben und das nötige $\bar\eps$ daraus
+berechnen, wenn wir die Gleichung nach $\bar\eps$ auflösen:
+\begin{align*}
+  {\bar\eps}^2 + \l(|F|+|G|\r)\bar\eps -\eps &= 0\\
+  \bar\eps&= -\frac{|F|+|G|}2 + \sqrt{\l(\frac{|F|+|G|}2\r)^2 + \eps}
+\end{align*}
+Es kommt nur die positive Wurzel als Lösung infrage, da die negative
+Wurzel zu einer negativen Lösung führt, die sich nicht als
+Fehlertoleranz eignet.
+
+Für $\bar\eps$ gibt es Maximalabstände $\delta_f$ und $\delta_g$,
+so dass Toleranzschranken $|f(x)-F|\leq \eps_f$ und
+$|g(x)-G|\leq \eps_g$ eingehalten werden.
+
+Wir nutzen den kleineren Maximalabstand
+$\delta:=\min(\delta_f,\delta_g)$ um die zugehörige Fehlerschranken
+für $|f(x)-F|\leq \bar\eps$, $|g(x)-G|\leq\bar\eps$ und somit auch für
+$|f(x)g(x)-FG|\leq\eps$ zu erfüllen.
+
+Zusammenfassend gesagt, finden wir also zu einer vorgegebenen
+Fehlerschranke $\eps$ eine Maximalabweichung $\delta$, so dass für
+alle Argumente $x$ mit $|x-X|\leq \delta$ die Ungleichung
+$|f(x)g(x)-FG|\leq\eps$ erfüllt ist. Das Produkt $f(x)g(x)$ hat also
+für die Annäherung von $x$ an $X$ den Grenzwert $FG$.
+
+\paragraph{Linearkombination}
+Seien $\alpha$ und $\beta$ zwei reelle Konstanten.  Konvergieren zwei
+Funktionen $f(x)$ und $g(x)$ bei Annäherung von $x$ an eine Stelle $X$
+gegen Grenzwerte $F$ beziehungsweise $G$, so konvergiert auch
+$\alpha\cdot f(x)+\beta\cdot g(x)$ gegen den Grenzwert $\alpha\cdot F+\beta\cdot G$.
+
+Für den uninteressanten Fall $\alpha=\beta=0$ ist klar, dass der
+Grenzwert von $\alpha f(x) + \beta g(x)$ Null ist.  Nehmen wir jetzt
+also an, dass mindestens eine der Zahlen $\alpha$ und $\beta$ von Null
+verschieden ist.
+\begin{align*}
+  |\alpha f(x) + \beta g(x) - (\alpha F + \beta G)| &= |\alpha (f(x)-F) + \beta (g(x)-G)|\\
+                                                    &\leq |\alpha|\cdot |f(x)-F| + |\beta|\cdot |g(x) - G|\\
+                                                    &\leq (|\alpha|+|\beta|)\bar\eps=:\eps
+\end{align*}
+Da wir den Trivialfall $\alpha=\beta=0$ ausgeschlossen haben, können
+wir nach $\bar\eps$ auflösen:
+\begin{align*}
+  \bar\eps &= \frac{\eps}{|\alpha|+|\beta|}
+\end{align*}
+Die Fehlertoleranz $\eps$ für die Linearkombination lässt sich also in
+eine Fehlertoleranz $\bar\eps$ für $f$ und $g$ rückrechnen.  Damit
+finden wir Maximalabweichungen $\delta_f$ und $\delta_g$, für $f$
+beziehungsweise $g$, bei denen die Fehlertoleranz $\bar\eps$ jeweils
+eingehalten wird.  Mit der Maximalabweichung
+$\delta:=\min(\delta_f,\delta_g)$ wird für $f$ und $g$ die
+Fehlertoleranz $\bar\eps$ eingehalten.  Die Linearkombination erfüllt
+nach obiger Rechnung die Fehlertoleranz $\eps$. Der Grenzwert der
+Linearkombination ist somit die Linearkombination der Grenzwerte $F$ und $G$.
+\subsection{Stetigkeit}
+\label{sec:limit:continuity}
+Für den Differenzenquotient $\DDx f(x_1,x_2)$ der quadratischen
+Funktion $f(x)=x^2$ haben wir in Abschnitt~\ref{sec:limit:ddx} die
+nennerfreie Berechnungsvorschrift $\DDx f(x_1,x_2)=x_2+x_1$ gefunden
+(siehe Gleichung~\eqref{eq:limit:DDxf}).  Die Auswertung der rechten
+Seite an der Stelle $x_2=x_1$ hat uns zur Vermutung geführt, dass für
+die Ableitung $\ddx f(x_1) = 2x_1$ gilt.
+
+In diesem Abschnitt sehen wir, dass $g(x_2)=x_2+x_1$ ein Beispiel für
+eine an der Stelle $x_1$ stetige Funktion. Bei diesen Funktionen kann
+man den Grenzwert an der Stelle $x_2=x_1$ einfach durch Einsetzen von
+$x_1$ berechnen.
+
+\begin{Def}
+  Sei $g(x)$ eine reelle Funktion in Abhängigkeit eines reellen
+  Arguments $x$. Die Funktion~$g(x)$ ist an einer Stelle $X$ \emph{stetig},
+  wenn der Grenzwert von $g(x)$ bei Annäherung von $x$ an $X$ gleich
+  $g(X)$ ist.
+
+  Ist $g(x)$ an allen Stellen $X$ stetig, so wird $g(x)$ einfach nur
+  als stetig bezeichnet.
+\end{Def}
+
+Lineare Funktionen
+\begin{align*}
+  f(x) = p_0 + p_1 x
+\end{align*}
+sind stetig. Um uns davon zu überzeugen müssen wir nach der
+Grenzwertdefinition zu jeder Fehlerschranke $\eps$ einen
+Maximalabstand $\delta$ mit $|f(x)-f(X)|\leq \eps$ für alle $x$ mit
+$|x-X|\leq \delta$ finden.
+Ist $p_1$ gleich null, so ist der Fehler $|f(x)-f(X)|$ unabhängig von $x$ und $X$ gleich null, der Grenzwert ist also $f(X)$.
+
+Für den Fall $p_1\neq 0$ nutzen wir $\delta =\frac{\eps}{|p_1|}$ als Maximalabstand für den die Fehlerschranke $\eps$ eingehalten wird:
+\begin{align*}
+  |f(x)-f(X)| = |p_0+p_1 x - (p_0+p_1X)| &= |p_1|\cdot|x-X|\leq |p_1|\frac{\eps}{|p_1|} = \eps
+\end{align*}
+Lineare Funktionen sind also stetig.
+
+Nach Abschnitt~\ref{sec:limit:theorems} ist der Grenzwert eines Produkts
+gleich dem Produkt der Grenzwerte ist und der Grenzwert einer
+Linearkombination gleich der Linearkombination der Grenzwerte.
+
+Die Stetigkeit der Potenzfunktionen $f(x)=x^n$ für $n=0,1,2,\ldots$
+ergibt sich daraus, dass diese als Produkte der linearen Funktion
+$g(x)=x$ mit sich selber darstellbar sind.
+
+Polynomfunktionen $p(x) = p_0+p_1\cdot x + \ldots + p_n x^n$ sind als
+Linearkombinationen von Potenzfunktionen ebenfalls stetig.
+
+\section{Polynome}
+\subsection{Monome und Polynome}
+Polynome sind wichtige Hilfsmittel in der Mathematik und Physik. Zum
+Beispiel kann man mit ihnen an Stützstellen vorgegebene Werte glatt
+interpolieren und Differentialgleichungen der Sorte, die wir im
+Einleitungsabschnitt kennengelernt haben, numerisch lösen.
+
+Die Potenzfunktionen $f(x)=x^n$ mit $n=1,2,\ldots$ werden auch als
+\emph{Monome} bezeichnet. Linearkombination
+\begin{align*}
+  f(x) &= p_0 + p_1\cdot x + p_2\cdot x^2 + \ldots + p_n\cdot x^n
+\end{align*}
+von Monomen sind \emph{Polynome}. Die Koeffizienten $p_i$ mit $i=0,\ldots,n$ sind dabei vorgegebene Konstanten.
+
+Polynome ersten Grades, d.h., mit $n=1$ kennst du sicher, das sind linearen Funktionen mit Konstantanteil $p_0$ und Anstieg $p_1$.
+
+Auch quadratische Polynome, d.h., mit $n=2$ habt ihr sicher schon in der Schule gehabt.
+\subsection{Polynominterpolation}
+\label{sec:interpol}
+Zur Erstellung eines Höhenprofils eines Berges wird an einer Reihe von
+Stellen $x_0,x_1,\ldots,x_n$ in horizontaler Richtung jeweils die Höhe $y_0,y_1,\ldots,y_n$
+vermessen. Man hat nur einzelne Stellen und einzelne Höhenwerte, der
+Höhenverlauf des Berges ist jedoch eigentlich glatt.
+
+Verbindet man die Punkte $(x_0,y_0), (x_1,y_1),\ldots,(x_n,y_n)$
+durch Geradenstücke, so entstehen an den Verbindungspunkten
+$(x_k,y_k)$ mit $k=1,\ldots,n-1$ unerwünschte Knicke (siehe 
+verbindender Polygonzug in Abbildung~\ref{fig:interpol:example}).
+
+Statt der Verbindungsgeraden kann man auch eine glatte Funktion $p(x)$
+zur Verbindung der Punkte nutzen. Als Bedingung dafür, dass diese Funktion die Punkte
+$(x_k,y_k)$ mit $k=0,\ldots,n$ verbindet, muss $p(x)$ an den Stellen $x_k$ die Werte $y_k$ annehmen:
+\begin{align*}
+  p(x_k) = y_k
+\end{align*}
+für $k=0,\ldots,n$. Hat man die Funktion $p(x)$
+konstruiert, kann man sie auch an anderen Stellen als
+$x=x_0,\ldots,x_n$ auswerten. Die Konstruktion der Funktion $p(x)$ und
+die Auswertung zwischen den vorgegebenen Stellen bezeichnet man als \emph{Interpolation}.
+
+Am Häufigsten nutzt man Polynome als glatte Funktion $p(x)$ bei der
+Interpolation.
+
+Wir schauen uns im Folgenden das leicht verständliche und wichtige
+Neville-Verfahren zur Polynominterpolation an. Dieses Verfahren bildet
+zum Beispiel auch die Grundlage für die bekanntere
+Newton-Interpolation, auf die wir hier jedoch nicht eingehen.
+
+Beim Neville-Verfahren baut man das Interpolationspolynom
+rekursiv auf.
+
+Sei $p(x;x_0,\ldots,x_{n-1})$ ein Polynom mit Höchstgrad $(n-1)$, das
+die Werte $y_0,\ldots,y_{n-1}$ an den Stellen $x_0,\ldots,x_{n-1}$
+interpoliert und analog sei $p(x;x_1,\ldots,x_n)$ ein Polynom mit
+Höchstgrad $(n-1)$, das die Werte $y_1,\ldots,y_n$ an den Stellen
+$x_1,\ldots,x_n$ interpoliert.
+
+Wir schauen uns die Eigenschaften des daraus konstruierten Polynoms
+\begin{align}
+  p(x;x_0,\ldots,x_n) &:= \frac{p(x;x_0,\ldots,x_{n-1})\cdot(x_n-x) + p(x;x_1,\ldots,x_n)\cdot(x-x_0)}{x_n-x_0}.
+                        \label{eq:interpol:Neville}
+\end{align}
+an:
+\begin{itemize}
+\item Das konstruierte Polynom hat Höchstgrad $n$, denn im Zähler
+  kommen die Faktoren $(x_n-x)$ und $(x-x_0)$ hinzu, in denen jeweils
+  einmal $x$ vorkommt. Es kann jedoch sein, dass sich die entstehenden
+  Terme von Grad $n$ gerade aufheben. Deshalb kann man nur eine Aussage für
+  den Höchstgrad treffen und nicht für den Polynomgrad selber.
+\item Das konstruierte Polynom interpoliert die Werte $y_1,\ldots,y_{n-1}$ an den Stellen
+  $x_1,\ldots,x_{n-1}$:
+  
+  Für $k=1,\ldots,n-1$ haben
+  $p(x_k;x_0,\ldots,x_{n-1})$ und $p(x_k;x_1,\ldots,x_{n})$ den
+  gleichen Wert $y_k$ und man kann diesen Faktor ausklammern
+  \begin{align*}
+    p(x_i;x_0,\ldots,x_n) &= \frac{y_k\cdot((x_n-x) + (x-x_0))}{x_n-x_0} = y_k
+  \end{align*}
+\item Zusätzlich interpoliert das konstruierte Polynom den Wert $y_0$
+  an der Stelle $x_0$ und den Wert $y_n$ an der Stelle $x_n$:
+  
+  Bei $x=x_0$ fällt der hintere Term des Zählers mit Faktor $(x-x_0)$ weg. Übrig bleibt
+  \begin{align*}
+    p(x_0;x_0,\ldots,x_n)&=\frac{p(x_0,x_0,\ldots,x_{n-1})\cdot(x_n-x_0)}{x_n-x_0} = p(x_0,x_0,\ldots,x_{n-1}) = y_0
+  \end{align*}
+  Dabei wurde berücksichtigt, dass $p(x;x_0,\ldots,x_{n-1})$ an der
+  Stelle $x_0$ den Wert $y_0$ interpoliert.
+  
+  Analog fällt bei $x=x_n$ der vordere Term mit Faktor $(x_n-x)$ weg.
+  Es ergibt sich wie im vorhergehenden Fall $p(x_n;x_0,\ldots,x_n)=p(x_n;x_1,\ldots,x_n)=y_n$.
+\end{itemize}
+
+Als Start für die rekursive Konstruktion der Interpolationspolynome
+mittels~\eqref{eq:interpol:Neville} kann man die konstanten Polynome $p(x,x_0)=y_0$ nutzen.
+
+\paragraph{Beispiel}
+Wir konstruieren das Interpolationspolynom 2. Grades mit folgenden Interpolationspunkten:
+\begin{table}[H]
+  \centering
+  \begin{tabular}[H]{l|l|l}
+    $i$ & $x_i$ & $y_i$ \\\hline
+    0 & 0 & 1 \\
+    1 & 1 & 3 \\
+    2 & 2 & 2
+  \end{tabular}
+  \caption{Stützstellen und Werte für das Interpolationspolynom}
+\end{table}
+Polynome vom Grad 0, die die Daten an jeweils einer Stelle interpolieren:
+\begin{align*}
+  p(x;0) &= 1&  p(x;1) &= 3&  p(x;2)&=2
+\end{align*}
+Polynome vom Grad 1, die die Daten an jeweils zwei Stellen interpolieren:
+\begin{align*}
+  p(x;0,1) &= \frac{p(x;0)\cdot(x_1-x) + p(x;1)\cdot(x-x_0)}{x_1-x_0}
+             = \frac{1\cdot(1-x) + 3\cdot(x-0)}{1-0}
+             = 2x+1\\
+  p(x;1,2) &= \frac{p(x;1)\cdot(x_2-x) + p(x;2)\cdot(x-x_1)}{x_2-x_1}
+             = \frac{3\cdot (2-x) + 2\cdot(x-1)}{2-1}
+             = -x+4
+\end{align*}
+Polynom vom Grad 2, das den gesamten Datensatz interpoliert:
+\begin{align*}
+  p(x;0,1,2) &= \frac{p(x;x_0,x_1)\cdot(x_2-x) + p(x;x_1,x_2)\cdot (x-x_0)}{x_2-x_0}
+               = \frac{(2x+1)\cdot(2-x) + (-x+4)\cdot(x-0)}{2-0}\\
+             &= -\frac32 x^2 +\frac72x +1
+\end{align*}
+Das resultierende Polynom ist in Abbildung~\ref{fig:interpol:example}
+dargestellt. Die Interpolationspunkte an den Stellen $(x_i,y_i)$ sind
+durch kleine blaue Punkte gekennzeichnet.
+\begin{figure}[H]
+  \centering
+  \begin{pspicture}(-0.5,-0.5)(2,4)
+    % \psgrid
+    \psline[linecolor=green](0,1)(1,3)(2,2)
+    \psaxes{->}(0,0)(0,0)(2.5,3.5)[$x$,270][$y$,180]
+    \psplot[linecolor=red]{0}{2}{
+      -1.5 x mul
+      3.5 add x mul
+      1 add
+    }
+    \psdots[linecolor=blue](0,1)(1,3)(2,2)
+  \end{pspicture}
+  \caption{Verbindender Polygonzug ({\color{green}grün}) und Interpolationspolynom
+    ({\color{red}rot}) für die {\color{blue}blau} dargestellten Punkte $(x_0,y_0)=(0,1)$,
+    $(x_1,y_1)=(1,3)$ und $(x_2,y_2)=(2,2)$}
+  \label{fig:interpol:example}
+\end{figure}
+\section{Differenzialquotienten von Polynomen}
+\subsection{Differenzialquotienten von linearen Funktionen und Monomen}
+In der Einleitung wurde der Differenzialquotient als Anstieg der
+Tangenten eingeführt. Lineare Funktionen beschreiben Geraden, bei
+denen der Anstieg konstant ist.
+
+Alle Sekanten einer linearen Funktion stimmen mit der durch sie
+beschriebenen Gerade überein und haben den Anstieg dieser
+Gerade. Als Grenzwert haben auch alle Tangenten diesen Anstieg.
+
+Für den formalen Test beschreiben wir die lineare Funktion mit zwei
+Konstanten $p_0$ und $p_1$ durch die Formel
+\begin{align*}
+  f(x) &= p_0 + p_1 x
+\end{align*}
+Für beliebige voneinander verschiedene Stellen $x_1,x_2$ ergibt sich
+der Sekantenanstieg gemäß
+\begin{align}
+  \frac{\Delta f}{\Delta x}(x_1,x_2) &= \frac{f(x_2) - f(x_1)}{x_2-x_1}\notag\\
+                                     &= \frac{(p_0+p_1x_2) - (p_0+p_1x_1)}{x_2-x_1}\notag\\
+                                     &= \frac{p_1(x_2-x_1)}{x_2-x_1} = p_1.\label{eq:limit:ddxp1}
+\end{align}
+Der Anstieg aller Sekanten ist also konstant gleich $p_1$ und damit
+ist auch der Anstieg als Grenzwert des Sekantenanstiegs gleich $p_1$.
+
+Aus den Differenzenquotienten der Potenzfunktion $f(x)=x^n$ vom Grad $n=2,3,\ldots$
+\begin{align*}
+  \frac{\Delta f}{\Delta x}(x_1,x_2) &= \frac{f(x_2) - f(x_1)}{x_2-x_1}\\
+                                     &= \frac{x_2^n - x_1^n}{x_2-x_1}
+\end{align*}
+erhält man mit der erweiterten binomischen Formel
+$a^n-b^n=(a-b)\cdot\l(\sum_{i=0}^{n-1}a^ib^{n-1-i}\r)$ aus
+Anhang~\ref{sec:extendedBinomial} wieder eine Form
+\begin{align*}
+  \DDx f(x_1,x_2)&= \frac{(x_2-x_1)\cdot\l(\sum_{i=0}^{n-1} x_2^ix_1^{n-1-i}\r)}{x_2-x_1},
+\end{align*}
+aus der sich der Nenner herauskürzt:
+\begin{align*}
+  \DDx f(x_1,x_2)&= \sum_{i=0}^{n-1} x_2^ix_1^{n-1-i}
+\end{align*}
+Die rechte Seite in der letzten Darstellung des Differenzenquotienten
+ist an der Stelle $x_2=x_1$ stetig.  Wir können den
+Differenzialquotient also durch Auswertung der rechten Seite an der
+Stelle $x_2=x_1$ berechnen:
+\begin{align*}
+  \ddx f(x_1) &= \sum_{i=0}^{n-1} \underbrace{x_1^i x_1^{n-1-i}}_{\text{$n$-mal $x_1^{n-1}$}} \\
+  \ddx f(x) &= n x^{n-1}
+\end{align*}
+Definieren wir $x^0=1$ (auch für den Fall $x=0$), so passt auch der Fall der linearen Funktion~\eqref{eq:limit:ddxp1}
+
+\subsection{Linearität von Differenzen- und Differenzialquotienten}
+\label{sec:linearity}
+\begin{align*}
+  f(x) = \alpha g(x) + \beta h(x)
+\end{align*}
+\begin{align*}
+  \frac{\Delta y}{\Delta x} &= \frac{f(x+\Delta x) - f(x)}{\Delta x}\\
+                            &= \frac{\alpha g(x+\Delta x) + \beta h(x+\Delta x) - (\alpha g(x) + \beta h(x))}{\Delta x}\\
+                            &= \alpha \frac{g(x+\Delta x) - g(x)}{\Delta x} + \beta \frac{h(x+\Delta x)- h(x)}{\Delta x}\\
+                            &= \alpha\frac{\Delta}{\Delta x} g(x) + \beta\frac{\Delta}{\Delta x} h(x)
+\end{align*}
+\begin{align*}
+  \ddx{}(\alpha g(x) + \beta h(x)) &= \alpha \ddx g(x) + \beta\ddx h(x)
+\end{align*}
+Anwendung auf Polynome
+\subsection{Numerische Lösung von Differenzialgleichungen}
+Zur Lösung von Differenzialgleichungen, wie wir sie im
+Einleitungsabschnitt kennengelernt haben, gibt es viele numerische
+Verfahren.
+
+Viele dieser Verfahren nutzen Polynominterpolation oder
+Polynomapproximation.
+
+Wir lösen die Differenzialgleichung
+\begin{align*}
+  \ddx y(x) &= \alpha y(x)
+\end{align*}
+für mit einem solchen Verfahren.
+Mit $\alpha=-\frac1{\tau}$ und $U_B=0$ passt diese Differenzialgleichung zu
+
+Für $y(x)$ setzen wir den polynomialen Ansatz
+\begin{align*}
+  y(x) &= \sum_{k=0}^n c_k x^k
+\end{align*}
+ein und erhalten:
+\begin{align*}
+  \ddx{}\l(\sum_{k=0}^n c_k x^k\r) &=\alpha\l(\sum_{k=1}^n c_k x^k\r)
+\end{align*}
+
+
+Auf der linken Seite wenden wir die Differentation auf das Polynom an:
+\begin{align*}
+  \sum_{k=1}^n c_k k x^{k-1} &= \sum_{k=0}^n  \alpha c_k x^k
+\end{align*}
+Auf der linken Seite fällt der erste Summand $c_0x^0=c_0$ beim Differenzieren heraus. Deshalb fängt die Summe erst bei Index 1 an. Für einen Vergleich der Koeffizienten zu den Potenzen von $x$ ist es günstiger, wenn links und rechts die selben Potenzen von $x$ stehen. Deshalb ersetzen wir auf der rechten Seite den Exponenten $k$ durch einen neuen Index $\bar k-1$. Aus $\bar k-1 = k$ ergibt sich $\bar k=k+1$.
+\begin{align*}
+  \sum_{k = 1}^{n} c_k k x^{k-1} = \sum_{\bar k=1}^{n+1}  \alpha c_{\bar k-1} x^{\bar k-1}
+\end{align*}
+In der Summe auf der rechten Seite nennen wir $\bar k$ wieder in $k$ um. Diese Variable ist ja nur der Summationsindex für den wir uns den Namen selber aussuchen können, solange er nicht mit bereits in der Summe vorkommenen Variablennamen kollidiert.
+\begin{align*}
+  \sum_{k=1}^n c_k k x^{k-1} &= \sum_{k=1}^n \alpha c_{k-1} x^{k-1} + \alpha c_n x^n
+\end{align*}
+\begin{align*}
+  \sum_{k=1}^n \l(c_kk - \alpha c_{k-1}\r)\cdot x^{k-1} &= \alpha c_n x^n
+\end{align*}
+\begin{align*}
+  \sum_{k=1}^n \l(c_kk - \alpha c_{k-1}\r)\cdot x^{k-1} &\approx 0
+\end{align*}
+\begin{align*}
+  c_{k} = \frac{\alpha}{k} c_{k-1}
+\end{align*}
+\begin{align*}
+  \sum_{k=1}^{n} \l( c_{k} k- \alpha c_{k-1}\r) x^{k-1} - \alpha c_nx^n &= 0
+\end{align*}
+\begin{align*}
+  c_0 &= y(0)
+\end{align*}
+
+\begin{align*}
+  &= \frac{\alpha^k y(0)}{k\cdot(k-1)\cdot\ldots\cdot 2\cdot 1}
+\end{align*}
+\begin{align*}
+  y(x) &\approx y(0)\cdot\sum_{k=0}^{n} \frac{1}{k!} (\alpha x)^k
+\end{align*}
+\begin{figure}[H]
+  \centering
+  \begin{pspicture}(-0.5,-8)(10.5,5.5)
+    %\psgrid
+    \def\myRef{2.71828 x neg exp }
+    \def\myApprox{
+      % transforms the 3 last elements on stack
+      % stack: partialSum summand iter
+      /myRecursion
+      {
+        1 add % update counter
+        dup % stack: partialSum summand iter iter
+        % ( <1> ) print stack
+        3 1 roll % stack: partialSum iter summand iter
+        % construction of the new summand: summand := summand/iter * alpha * x
+        % ( <2> ) print stack
+        div
+        \myAlpha mul
+        x mul
+        dup % stack: partialSum iter summand summand
+        % ( <3> ) print stack
+        4 -1 roll % iter summand summand partialSum
+        % ( <4> ) print stack
+        add % stack: iter summand partialSum
+        exch % stack: iter partialSum summand
+        % ( <5> ) print stack
+        3 -1 roll
+        % ( <6> ) print stack
+      } def
+      % Start values:
+      1.0 % partialSum
+      1.0 % summand
+      0 % iter
+      \myDegree { myRecursion } repeat
+      pop pop 
+    }
+    \def\myAlpha{-1.0 }    
+    \def\myDegree{8 }
+    \rput[bl](0,0){\begin{psgraph}{->}(0,0)(4.5,1.5){10cm}{5cm}
+        \psplot[linecolor=green]{0}{4}{
+          \myRef
+        }
+        \psplot[linecolor=blue]{0}{4}{
+          \myApprox
+        }
+        \def\myDegree{10 }
+        \psplot[linecolor=red]{0}{4}{
+          \myApprox
+        }
+      \end{psgraph}}
+    \def\myErr{
+      \myRef \myApprox sub
+      abs
+      dup 1e-9 le { pop 1e-7 } if
+      log
+    }
+    \rput[tl](0,-1){\begin{psgraph}[Oy=-5,ylogBase=10]{->}(0,-5)(0,-7.5)(4.5,1.0){10cm}{7cm}
+        \def\myDegree{8 }
+        \psplot[linecolor=blue]{0}{4}{
+          \myErr
+        }
+        \def\myDegree{10 }
+        \psplot[linecolor=red]{0}{4}{
+          \myErr
+        }
+      \end{psgraph}}
+  \end{pspicture}
+  \caption{Approximation der Differenzialgleichung $\ddt y = -y$}
+  \label{fig:poly:exp}
+\end{figure}
+\appendix
+\section{Erweiterte Binomische Formel}
+\label{sec:extendedBinomial}
+\begin{align*}
+  (a-b)\cdot\l(\sum_{i=0}^{n-1} a^ib^{n-1-i}\r)
+  &= \sum_{i=0}^{n-1} a^{i+1}b^{n-1-i} - \sum_{i=0}^{n-1} a^i b^{n-i}\\
+\end{align*}
+$\bar i = i+1$
+\begin{align*}
+  &= \sum_{\bar i = 1}^n a^{\bar i} b^{n-\bar i} - \sum_{i=0}^{n-1} a^i b^{n-i}\\
+  &= \underbrace{a^n}_{\bar i=n} + \underbrace{\l(\sum_{i=1}^{n-1} a^i b^{n-i} - a^i b^{n-i}\r)}_{=0} - \underbrace{b^n}_{i=0}\\
+  &= a^n - b^n
+\end{align*}
+\end{document}
+
+%%% Local Variables:
+%%% eval: (flyspell "de_DE")
+%%% End:
