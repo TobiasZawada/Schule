@@ -277,7 +277,7 @@ $I(t)$, der am positiven Anschluss in den Kondensator hineinfließt:
   I(t) &= \ddt Q(t)
          \label{eq:electrics:cap:I}
 \end{align}
-In Abschnitt~\ref{sec:linearity} sehen wir, dass konstante
+In Abschnitt~\ref{sec:ddx:linearity} sehen wir, dass konstante
 Linearfaktoren bei der Differenzation einfach herausgezogen werden
 können. So wird aus~\eqref{eq:electrics:cap:U} die Gleichung
 \begin{align*}
@@ -950,7 +950,7 @@ Abschnitt~\ref{sec:poly} zur Vereinfachung der Schreibweise zumindest
 im Fall $n=1$ der Term $0^0$ als $1$ interpretiert, so dass die Formel
 $\ddx f(x) = n x^{n-1}$ auch in diesem Fall gültig bleibt.
 \subsection{Linearität von Differenzen- und Differenzialquotienten}
-\label{sec:linearity}
+\label{sec:ddx:linearity}
 Der Differenzialquotient ist als auf Funktionen anzuwendende Operation
 \emph{linear}.  Diese Eigenschaft ist außerordentlich
 wichtig. Abschnitt~\ref{sec:poly:ddx} wird uns einen Eindruck davon
@@ -997,7 +997,46 @@ den Grenzwert für die Annäherung von $x_2$ an $x_1$, so erhalten wir die Gleic
 Somit hat sich die Linearität des Differenzialquotienten bestätigt.
 \subsection{Differenzialquotienten von Polynomen}
 \label{sec:poly:ddx}
+In Abschnitt~\ref{sec:poly} wurden Monome als Potenzfunktionen $x^n$
+mit $n=0,1,2,\ldots$ eingeführt, wobei $x^0=1$ gesetzt wird unabhängig
+davon dass $x$ auch null werden kann.
+Polynome sind Linearkombinationen
+\begin{align*}
+  p(x)&=p_0+p_1x+\ldots+p_nx^n 
+  \intertext{oder mit Summenschreibweise}
+  p(x)&=\sum_{i=0}^n p_i x^i
+\end{align*}
+von Monomen mit konstanten Koeffizienten $p_0,p_1,\ldots,p_n$.
 
+Die Ableitungen $\ddx{}\left(x^n\right) = n\cdot x^{n-1}$ für
+$n=1,2,\ldots$ von Monomen haben wir in Abschnitt~\ref{sec:poly:ddx}
+kennengelernt. Dabei interpretieren wir $\frac{0}{x}=0$ und $x^0 = 1$
+unabhängig davon, dass $x$ auch null werden kann.
+
+In Abschnitt~\ref{sec:ddx:linearity} haben wir uns davon überzeugt,
+dass der Differenzenquotient eine lineare Operation darstellt, dass
+also der Differenzialquotient einer Linearkombination
+differenzierbarer Funktionen gleich der Linearkombination der
+Differenzialquotienten der Funktionen ist.
+
+Die Formel für die Ableitung von Polynomen ist jetzt nur noch ein
+Zusammensetzen all dieser Bausteine.
+
+Da die Monome differenzierbar sind und die Polynome Linearkombination
+von Monomen, ist die Ableitung von Polynomen gerade die zugehörige
+Linearkombination der Differenzialquotienten der eingehenden Monome.
+
+Wir gehen von der Summenform eines Polynoms aus.
+\begin{align*}
+  p(x) = \sum_{i=0}^n p_i x^i
+\end{align*}
+De Differenzialquotient des Konstantanteils $p_0$ ist null. Das
+berücksichtigen wir, indem wir die Summe für den Differenzialquotient
+des Polynoms erst ab $1$ laufen lassen. Die Differenzialquotienten der
+anderen Monome haben wir uns eben angesehen.
+\begin{align*}
+  \ddx p(x) = \sum_{i=1}^n p_i i x^{i-1}.
+\end{align*}
 \subsection{Numerische Lösung von Differenzialgleichungen}
 Zur Lösung von Differenzialgleichungen, wie wir sie im
 Einleitungsabschnitt kennengelernt haben, gibt es viele numerische
