@@ -723,6 +723,7 @@ Linearkombinationen von Potenzfunktionen ebenfalls stetig.
 
 \section{Polynome}
 \subsection{Monome und Polynome}
+\label{sec:poly}
 Polynome sind wichtige Hilfsmittel in der Mathematik und Physik. Zum
 Beispiel kann man mit ihnen an Stützstellen vorgegebene Werte glatt
 interpolieren und Differentialgleichungen der Sorte, die wir im
@@ -730,14 +731,33 @@ Einleitungsabschnitt kennengelernt haben, numerisch lösen.
 
 Die Potenzfunktionen $f(x)=x^n$ mit $n=1,2,\ldots$ werden auch als
 \emph{Monome} bezeichnet. Linearkombination
-\begin{align*}
+\begin{align}
   f(x) &= p_0 + p_1\cdot x + p_2\cdot x^2 + \ldots + p_n\cdot x^n
-\end{align*}
+         \label{eq:poly}
+\end{align}
 von Monomen sind \emph{Polynome}. Die Koeffizienten $p_i$ mit $i=0,\ldots,n$ sind dabei vorgegebene Konstanten.
 
-Polynome ersten Grades, d.h., mit $n=1$ kennst du sicher, das sind linearen Funktionen mit Konstantanteil $p_0$ und Anstieg $p_1$.
+Für Summen, wie in Gleichung~\eqref{eq:poly} nutzen wir im Folgenden auch das Summenzeichen
+\begin{align}
+  f(x) &= \sum_{i=0}^n p_i x^i
+         \label{eq:poly:sum}
+\end{align}
+Obwohl $x^0$ an der Stelle $x=0$ nicht auswertbar ist, wird formal
+vereinbart, dass bei Variablen wie $x$ der Term $x^0$ als $1$ zu
+interpretieren ist, um die Kurzschreibweise~\eqref{eq:poly:sum}
+effizient einsetzen zu können.
 
-Auch quadratische Polynome, d.h., mit $n=2$ habt ihr sicher schon in der Schule gehabt.
+Polynome ersten Grades, d.h., mit $n=1$ kennst du sicher, das sind
+linearen Funktionen mit Konstantanteil $p_0$ und Anstieg $p_1$.  Zum
+Beispiel ergibt sich mit den Koeffizienten $p_0=1$ und $p_1=2$ das
+Polynom $p(x)=1+2x$, das im nächsten Abschnitt als
+Gleichung~\eqref{eq:interpol:px01} auftaucht.
+
+Auch quadratische Polynome, d.h., mit $n=2$ habt ihr sicher schon in
+der Schule gehabt.  Beispielsweise ist $p(x)=1 + \frac 72x-\frac32x^2$
+das im nächsten Abschnitt berechnete
+Interpolationspolynom~\eqref{eq:interpol:px012} mit $p_0=1$,
+$p_1=\frac72$ und $p_2=-\frac32$.
 \subsection{Polynominterpolation}
 \label{sec:interpol}
 Zur Erstellung eines Höhenprofils eines Berges wird an einer Reihe von
@@ -833,20 +853,20 @@ Polynome vom Grad 0, die die Daten an jeweils einer Stelle interpolieren:
   p(x;0) &= 1&  p(x;1) &= 3&  p(x;2)&=2
 \end{align*}
 Polynome vom Grad 1, die die Daten an jeweils zwei Stellen interpolieren:
-\begin{align*}
+\begin{align}
   p(x;0,1) &= \frac{p(x;0)\cdot(x_1-x) + p(x;1)\cdot(x-x_0)}{x_1-x_0}
              = \frac{1\cdot(1-x) + 3\cdot(x-0)}{1-0}
-             = 2x+1\\
+             = 2x+1\label{eq:interpol:px01}\\
   p(x;1,2) &= \frac{p(x;1)\cdot(x_2-x) + p(x;2)\cdot(x-x_1)}{x_2-x_1}
              = \frac{3\cdot (2-x) + 2\cdot(x-1)}{2-1}
-             = -x+4
-\end{align*}
+             = -x+4\label{eq:interpol:px12}
+\end{align}
 Polynom vom Grad 2, das den gesamten Datensatz interpoliert:
-\begin{align*}
-  p(x;0,1,2) &= \frac{p(x;x_0,x_1)\cdot(x_2-x) + p(x;x_1,x_2)\cdot (x-x_0)}{x_2-x_0}
-               = \frac{(2x+1)\cdot(2-x) + (-x+4)\cdot(x-0)}{2-0}\\
-             &= -\frac32 x^2 +\frac72x +1
-\end{align*}
+\begin{align}
+  p(x;0,1,2) &= \frac{p(x;x_0,x_1)\cdot(x_2-x) + p(x;x_1,x_2)\cdot (x-x_0)}{x_2-x_0}\notag\\
+             &= \frac{(2x+1)\cdot(2-x) + (-x+4)\cdot(x-0)}{2-0}\notag\\
+             &= -\frac32 x^2 +\frac72x +1\label{eq:interpol:px012}
+\end{align}
 Das resultierende Polynom ist in Abbildung~\ref{fig:interpol:example}
 dargestellt. Die Interpolationspunkte an den Stellen $(x_i,y_i)$ sind
 durch kleine blaue Punkte gekennzeichnet.
@@ -868,7 +888,12 @@ durch kleine blaue Punkte gekennzeichnet.
     $(x_1,y_1)=(1,3)$ und $(x_2,y_2)=(2,2)$}
   \label{fig:interpol:example}
 \end{figure}
-\section{Differenzialquotienten von Polynomen}
+\subsection{Differenzialquotienten von Polynomen}
+In Abschnitt~\ref{sec:poly} haben wir Polynome
+\begin{align*}
+  p(x) &= \sum_{i=0}^n p_i x^i
+\end{align*}
+als Linearkombinationen von Monomen $x^0, x^1,\ldots$ kennengelernt.
 \subsection{Differenzialquotienten von linearen Funktionen und Monomen}
 In der Einleitung wurde der Differenzialquotient als Anstieg der
 Tangenten eingeführt. Lineare Funktionen beschreiben Geraden, bei
@@ -912,27 +937,67 @@ Die rechte Seite in der letzten Darstellung des Differenzenquotienten
 ist an der Stelle $x_2=x_1$ stetig.  Wir können den
 Differenzialquotient also durch Auswertung der rechten Seite an der
 Stelle $x_2=x_1$ berechnen:
-\begin{align*}
+\begin{align}
   \ddx f(x_1) &= \sum_{i=0}^{n-1} \underbrace{x_1^i x_1^{n-1-i}}_{\text{$n$-mal $x_1^{n-1}$}} \\
-  \ddx f(x) &= n x^{n-1}
-\end{align*}
-Definieren wir $x^0=1$ (auch für den Fall $x=0$), so passt auch der Fall der linearen Funktion~\eqref{eq:limit:ddxp1}
+  \ddx f(x) &= n x^{n-1}\label{eq:diff:monom}
+\end{align}
+Die letzte Gleichung ist eigentlich nur für $n=2,3,\ldots$ anwendbar,
+da für $x=0$ in den Fällen $n=0$ und $n=1$ auf die nicht definierten
+Terme $0\cdot\frac{1}{0}$ beziehungsweise $1\cdot 0^0$ führt.
 
+Jedoch wird, wie bei der Einführung des Summenzeichens in
+Abschnitt~\ref{sec:poly} zur Vereinfachung der Schreibweise zumindest
+im Fall $n=1$ der Term $0^0$ als $1$ interpretiert, so dass die Formel
+$\ddx f(x) = n x^{n-1}$ auch in diesem Fall gültig bleibt.
 \subsection{Linearität von Differenzen- und Differenzialquotienten}
 \label{sec:linearity}
+Der Differenzialquotient ist als auf Funktionen anzuwendende Operation
+\emph{linear}.  Diese Eigenschaft ist außerordentlich
+wichtig. Abschnitt~\ref{sec:poly:ddx} wird uns einen Eindruck davon
+vermitteln, wenn wir mit Hilfe der Linearität Differenzialquotienten
+von Polynomen auf Differenzialquotienten von Monomen zurückführen.
+
+In diesem Abschnitt werden wir uns zuerst anschauen, was die
+Linearität des Differenzialquotienten bedeutet soll. Danach überzeugen
+wir uns davon sich, dass Differenzenquotienten ebenfalls linear sind
+und dass sich diese Eigenschaft durch Grenzwertbildung auf
+Differenzialquotienten überträgt.
+
+Seien $\alpha$, $\beta$ reelle Konstanten und $f(x)$, $g(x)$ reelle
+Funktionen, die an der Stelle $x$ differenzierbar sind.
+
+Dann ist die Linearkombination
 \begin{align*}
   f(x) = \alpha g(x) + \beta h(x)
 \end{align*}
+der Funktionen ebenfalls differenzierbar und es gilt die Gleichung
 \begin{align*}
-  \frac{\Delta y}{\Delta x} &= \frac{f(x+\Delta x) - f(x)}{\Delta x}\\
-                            &= \frac{\alpha g(x+\Delta x) + \beta h(x+\Delta x) - (\alpha g(x) + \beta h(x))}{\Delta x}\\
-                            &= \alpha \frac{g(x+\Delta x) - g(x)}{\Delta x} + \beta \frac{h(x+\Delta x)- h(x)}{\Delta x}\\
-                            &= \alpha\frac{\Delta}{\Delta x} g(x) + \beta\frac{\Delta}{\Delta x} h(x)
+  \ddx f(x) = \ddx{}(\alpha g(x) + \beta h(x)) &= \alpha \ddx g(x) + \beta\ddx h(x),
 \end{align*}
+das heißt, der Differenzialquotient ist \emph{linear}.
+
+Analog gelten für Differenzenquotienten der Funktion $f$ mit zwei
+voneinander verschiedenen Stellen $x_1,x_2$ die Gleichungen
 \begin{align*}
-  \ddx{}(\alpha g(x) + \beta h(x)) &= \alpha \ddx g(x) + \beta\ddx h(x)
+  \frac{\Delta f}{\Delta x}(x_1,x_2) &= \frac{f(x_2) - f(x_1)}{x_2-x_1}\\
+                            &= \frac{\alpha g(x_2) + \beta h(x_2) - (\alpha g(x_1) + \beta h(x_1))}{x_2-x_1}\\
+                            &= \alpha \frac{g(x_2) - g(x_1)}{x_2-x_1} + \beta \frac{h(x_2)- h(x_1)}{x_2-x_1}\\
+                            &= \alpha\frac{\Delta}{\Delta x} g(x_1,x_2) + \beta\frac{\Delta}{\Delta x} h(x_1,x_2)
 \end{align*}
-Anwendung auf Polynome
+Im Abschnitt~\ref{sec:limit:theorems} über Grenzwertsätze haben wir
+uns schon davon überzeugt, dass der Grenzwert einer Linearkombination
+gleich der Linearkombination von Grenzwerten ist. Bilden wir auf beiden Seiten der Gleichung
+\begin{align*}
+  \DDx f(x_1,x_2) = \alpha\DDx g(x_1,x_2) + \beta\DDx f(x_1,x_2)
+\end{align*}
+den Grenzwert für die Annäherung von $x_2$ an $x_1$, so erhalten wir die Gleichung
+\begin{align*}
+  \ddx f(x_1) &= \alpha \ddx g(x_1) + \beta\ddx f(x_1). 
+\end{align*}
+Somit hat sich die Linearität des Differenzialquotienten bestätigt.
+\subsection{Differenzialquotienten von Polynomen}
+\label{sec:poly:ddx}
+
 \subsection{Numerische Lösung von Differenzialgleichungen}
 Zur Lösung von Differenzialgleichungen, wie wir sie im
 Einleitungsabschnitt kennengelernt haben, gibt es viele numerische
