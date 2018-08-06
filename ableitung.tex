@@ -263,6 +263,7 @@ oft zur \emph{Wärmeleitungsgleichung}
 $a\frac{\partial^2 T}{\partial x^2}(x,t) = \pdt{T}(x,t)$ mit
 $a=\frac{k}{A\rho c}$ zusammengefasst werden.
 \subsection{Elektrotechnik}
+\label{sec:intro:et}
 Die Spannung $U$ über einem Kondensator ist proportional zu der auf
 ihm gespeicherten Ladung $Q$. Der Proportionalitätsfaktor ist die
 Kapazität $C$ und die Gleichung für die Spannung am Kondensator lautet
@@ -1038,29 +1039,43 @@ anderen Monome haben wir uns eben angesehen.
   \ddx p(x) = \sum_{i=1}^n p_i i x^{i-1}.
 \end{align*}
 \subsection{Numerische Lösung von Differenzialgleichungen}
+\label{sec:numODE}
 Zur Lösung von Differenzialgleichungen, wie wir sie im
 Einleitungsabschnitt kennengelernt haben, gibt es viele numerische
 Verfahren.
 
-Viele dieser Verfahren nutzen Polynominterpolation oder
+Ein Großteil dieser Verfahren nutzt Polynominterpolation oder
 Polynomapproximation.
 
 Wir lösen die Differenzialgleichung
-\begin{align*}
+\begin{align}
   \ddx y(x) &= \alpha y(x)
-\end{align*}
-für mit einem solchen Verfahren.
-Mit $\alpha=-\frac1{\tau}$ und $U_B=0$ passt diese Differenzialgleichung zu
+              \label{eq:numODE:example}
+\end{align}
+mit einem solchen Verfahren numerisch approximativ für kleine Beträge
+von $x$.  Diese Differenzialgleichung passt zur
+Gleichung~\eqref{eq:intro:et:dgl} für das elektrische Netzwerk in
+Abschnitt~\ref{sec:intro:et}, wenn wir $x=t$, $y=U$,
+$\alpha=-\frac1\tau$ und $U_B=0$ setzten. Sie beschreibt dann den
+Entladevorgang eines RC-Gliedes.
 
-Für $y(x)$ setzen wir den polynomialen Ansatz
-\begin{align*}
+Wir nutzen bei dem numerischen Verfahren aus, dass sich der Betrag von $x^n$ stark verkleinert, wenn der Betrag von $x$ kleiner wird. Nutzen wir zum Beispiel $x$ nur im Bereich von $-0.1$ bis $0.1$, so ändert sich zum Beispiel $x^5$ nur im Bereich von $-0.00001$ bis $-0.00001$.
+
+Davon lassen wir uns leiten und setzen für $y(x)$ in Gleichung~\eqref{eq:numODE:example} den polynomialen Ansatz
+\begin{align}
   y(x) &= \sum_{k=0}^n c_k x^k
-\end{align*}
-ein und erhalten:
+         \label{eq:numODE:Poly}
+\end{align}
+ein. Wir gleichen dann die bisher noch freien Koeffizienten $c_k$ so
+ab, dass die Gleichung für so viele Potenzen niedrigen Grades erfüllt
+wird, wie es möglich ist. Den Fehler in den höheren Potenzen von $x$
+vernachlässigen wir. Wir wissen ja bereits, dass dieser Fehler sehr
+klein wird, wenn wir den Betrag von $x$ hinreichend klein wählen.
+
+Einsetzen des Ansatzes~\eqref{eq:numODE:Poly} in Gleichung~\eqref{eq:numODE:example} liefert:
 \begin{align*}
   \ddx{}\l(\sum_{k=0}^n c_k x^k\r) &=\alpha\l(\sum_{k=1}^n c_k x^k\r)
 \end{align*}
-
 
 Auf der linken Seite wenden wir die Differentation auf das Polynom an:
 \begin{align*}
