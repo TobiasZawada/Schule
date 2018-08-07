@@ -1053,13 +1053,16 @@ Wir lösen die Differenzialgleichung
               \label{eq:numODE:example}
 \end{align}
 mit einem solchen Verfahren numerisch approximativ für kleine Beträge
-von $x$.  Diese Differenzialgleichung passt zur
+von $x$. Die Differenzialgleichung~\eqref{eq:numODE:example} passt zur
 Gleichung~\eqref{eq:intro:et:dgl} für das elektrische Netzwerk in
 Abschnitt~\ref{sec:intro:et}, wenn wir $x=t$, $y=U$,
 $\alpha=-\frac1\tau$ und $U_B=0$ setzten. Sie beschreibt dann den
 Entladevorgang eines RC-Gliedes.
 
-Wir nutzen bei dem numerischen Verfahren aus, dass sich der Betrag von $x^n$ stark verkleinert, wenn der Betrag von $x$ kleiner wird. Nutzen wir zum Beispiel $x$ nur im Bereich von $-0.1$ bis $0.1$, so ändert sich zum Beispiel $x^5$ nur im Bereich von $-0.00001$ bis $-0.00001$.
+Wir nutzen bei dem numerischen Verfahren aus, dass sich der Betrag von
+$x^n$ stark verkleinert, wenn der Betrag von $x$ kleiner wird. Nutzen
+wir zum Beispiel $x$ nur im Bereich von $-0.1$ bis $0.1$, so ändert
+sich zum Beispiel $x^5$ nur im Bereich von $-0.00001$ bis $-0.00001$.
 
 Davon lassen wir uns leiten und setzen für $y(x)$ in Gleichung~\eqref{eq:numODE:example} den polynomialen Ansatz
 \begin{align}
@@ -1077,36 +1080,102 @@ Einsetzen des Ansatzes~\eqref{eq:numODE:Poly} in Gleichung~\eqref{eq:numODE:exam
   \ddx{}\l(\sum_{k=0}^n c_k x^k\r) &=\alpha\l(\sum_{k=1}^n c_k x^k\r)
 \end{align*}
 
-Auf der linken Seite wenden wir die Differentation auf das Polynom an:
+Auf der linken Seite wenden wir die Differenziation auf das Polynom an:
 \begin{align*}
   \sum_{k=1}^n c_k k x^{k-1} &= \sum_{k=0}^n  \alpha c_k x^k
 \end{align*}
-Auf der linken Seite fällt der erste Summand $c_0x^0=c_0$ beim Differenzieren heraus. Deshalb fängt die Summe erst bei Index 1 an. Für einen Vergleich der Koeffizienten zu den Potenzen von $x$ ist es günstiger, wenn links und rechts die selben Potenzen von $x$ stehen. Deshalb ersetzen wir auf der rechten Seite den Exponenten $k$ durch einen neuen Index $\bar k-1$. Aus $\bar k-1 = k$ ergibt sich $\bar k=k+1$.
+Hier sei noch einmal daran erinnert, dass beim Differenzieren der
+erste Summand $c_0x^0=c_0$ von $\sum_{k=0}^n c_kx^k$
+herausfällt. Deshalb fängt die Summe erst bei Index 1 an. Für einen
+Vergleich der Koeffizienten zu den Potenzen von $x$ ist es günstiger,
+wenn links und rechts die selben Potenzen von $x$ stehen. Deshalb
+ersetzen wir auf der rechten Seite den Exponenten $k$ durch einen
+neuen Index $\bar k-1$. Aus $\bar k-1 = k$ ergibt sich $\bar k=k+1$.
 \begin{align*}
   \sum_{k = 1}^{n} c_k k x^{k-1} = \sum_{\bar k=1}^{n+1}  \alpha c_{\bar k-1} x^{\bar k-1}
 \end{align*}
-In der Summe auf der rechten Seite nennen wir $\bar k$ wieder in $k$ um. Diese Variable ist ja nur der Summationsindex für den wir uns den Namen selber aussuchen können, solange er nicht mit bereits in der Summe vorkommenen Variablennamen kollidiert.
+Die Zählvariable $\bar k$ ist der Summationsindex der Summe auf der
+rechten Seite, für den wir uns den Namen selber aussuchen können,
+solange er nicht mit bereits in der Summe vorkommenden Variablennamen
+kollidiert. Wir bezeichnen ihn wieder mit $k$, damit der Vergleich der
+in beiden Summen auftretenden Potenzen von $x$ einfacher wird.
+
+Bei der entstehenden Gleichung
+\begin{align}
+  \sum_{k = 1}^{n} c_k k x^{k-1} = \sum_{k=1}^{n+1}  \alpha c_{k-1} x^{k-1}
+  \label{eq:numODE:poly}
+\end{align}
+können wir die Koeffizienten der Potenzen $x^{k-1}$ für $k=1,\ldots,n$
+abgleichen. Die Koeffizienten zu $x^{k-1}$ für $k=1,\ldots,n$ auf der
+linken und rechten Seite der Gleichung sind $c_k k$ beziehungsweise
+$\alpha c_{k-1}$. Die Gleichungen für deren Abgleich lauten
 \begin{align*}
-  \sum_{k=1}^n c_k k x^{k-1} &= \sum_{k=1}^n \alpha c_{k-1} x^{k-1} + \alpha c_n x^n
+  k c_{k} &= \alpha c_{k-1}.
 \end{align*}
+Der Koeffizientenabgleich für die höchste Potenz $x^n$ in
+Gleichung~\eqref{eq:numODE:poly} liefert die Gleichung
 \begin{align*}
-  \sum_{k=1}^n \l(c_kk - \alpha c_{k-1}\r)\cdot x^{k-1} &= \alpha c_n x^n
+  0 &= \alpha c_n
 \end{align*}
+Damit erhält man das Gleichungssystem
+\begin{align}
+  1\cdot c_1 &= \alpha c_0\label{eq:numODE:x0}\\
+  2\cdot c_2 &= \alpha c_1\\
+             &\vdots\\
+  n\cdot c_{n} &= \alpha c_{n-1}\label{eq:numODE:xn1}\\
+  0 &= \alpha c_n\label{eq:numODE:xn}
+\end{align}
+für die Koeffizienten $c_k$.
+
+Dieses Gleichungssystem ist von unten nach oben lösbar
+($c_n=0 \Rightarrow c_{n-1}=0 \Rightarrow \ldots\Rightarrow c_0 = 0$)
+und hat nur noch die Triviallösung, dass alle Koeffizienten $c_k$ null
+sind, also $y(x)=0$ gilt.
+
+Um nichttriviale Lösungen zu erhalten, vernachlässigen wir den
+Koeffizientenvergleich für die höchste Potenz.
+
+Das kann man zum Beispiel so interpretieren, dass man statt der Lösung
+für \eqref{eq:numODE:example} die exakte Lösung der leicht gestörten
+Differenzialgleichung
+\begin{align}
+  \tau \ddx y &= \alpha y - \alpha c_n x^n
+                \label{eq:numODE:poly:mod}
+\end{align}
+ermittelt. Die Störung der Differenzialgleichung bleibt klein, wenn
+wir uns nicht zu weit hinaus wagen, das heißt, wenn wir die
+Differenzialgleichung nur für kleine Werte von $x$ nutzen.
+
+Der Koeffizientenvergleich für den
+Polynomansatz~\eqref{eq:numODE:Poly} bei~\eqref{eq:numODE:poly:mod}
+liefert anstelle von~\eqref{eq:numODE:xn} die immer erfüllte Gleichung
+$0=0$, die aus dem System gestrichen werden kann.
+
+Es bleiben die Gleichungen
 \begin{align*}
-  \sum_{k=1}^n \l(c_kk - \alpha c_{k-1}\r)\cdot x^{k-1} &\approx 0
+  k c_k &= \alpha c_{k-1}
 \end{align*}
-\begin{align*}
-  c_{k} = \frac{\alpha}{k} c_{k-1}
-\end{align*}
-\begin{align*}
-  \sum_{k=1}^{n} \l( c_{k} k- \alpha c_{k-1}\r) x^{k-1} - \alpha c_nx^n &= 0
-\end{align*}
+für $k=1,\ldots,n$, oder umgestellt nach $c_k$ die Gleichungen
+\begin{align}
+  c_k = \alpha\frac{c_{k-1}}k.
+  \label{eq:numODE:coeffs}
+\end{align}
+In der letzten Form kann man die Gleichungen als rekursive
+Zuweisungskette interpretieren. Der Koeffizient $c_k$ wird aus dem
+vorhergehenden $c_{k-1}$ berechnet. durch Multiplikation mit $\alpha$ und
+Division durch $k$ berechnet.
+
+Der Koeffizient $c_0$ bleibt dabei frei wählbar. Aus~\eqref{eq:numODE:Poly} erkennt man, dass $c_0$ gerade der Wert von $y(x)$ für $x=0$ ist. (Im Beispiel unseres Entladevorgangs ist das die Anfangsspannung des Kondensators.)
+
+Wir können also zusätzlich 
 \begin{align*}
   c_0 &= y(0)
 \end{align*}
+schreiben.
 
+Bei jedem Schritt $k=1,\ldots,n$ des Systems~\eqref{eq:numODE:coeffs} von Zuweisungen kommt ein Faktor $\alpha$ hinzu und es wird durch das aktuelle $k$ dividiert. So erhält man für die Koeffizienten die Berechnungsvorschrift
 \begin{align*}
-  &= \frac{\alpha^k y(0)}{k\cdot(k-1)\cdot\ldots\cdot 2\cdot 1}
+  c_k &= \frac{\alpha^k y(0)}{k\cdot(k-1)\cdot\ldots\cdot 2\cdot 1}.
 \end{align*}
 \begin{align*}
   y(x) &\approx y(0)\cdot\sum_{k=0}^{n} \frac{1}{k!} (\alpha x)^k
