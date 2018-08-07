@@ -1067,7 +1067,7 @@ sich zum Beispiel $x^5$ nur im Bereich von $-0.00001$ bis $-0.00001$.
 Davon lassen wir uns leiten und setzen für $y(x)$ in Gleichung~\eqref{eq:numODE:example} den polynomialen Ansatz
 \begin{align}
   y(x) &= \sum_{k=0}^n c_k x^k
-         \label{eq:numODE:Poly}
+         \label{eq:numODE:poly:ansatz}
 \end{align}
 ein. Wir gleichen dann die bisher noch freien Koeffizienten $c_k$ so
 ab, dass die Gleichung für so viele Potenzen niedrigen Grades erfüllt
@@ -1075,7 +1075,7 @@ wird, wie es möglich ist. Den Fehler in den höheren Potenzen von $x$
 vernachlässigen wir. Wir wissen ja bereits, dass dieser Fehler sehr
 klein wird, wenn wir den Betrag von $x$ hinreichend klein wählen.
 
-Einsetzen des Ansatzes~\eqref{eq:numODE:Poly} in Gleichung~\eqref{eq:numODE:example} liefert:
+Einsetzen des Ansatzes~\eqref{eq:numODE:poly:ansatz} in Gleichung~\eqref{eq:numODE:example} liefert:
 \begin{align*}
   \ddx{}\l(\sum_{k=0}^n c_k x^k\r) &=\alpha\l(\sum_{k=1}^n c_k x^k\r)
 \end{align*}
@@ -1142,12 +1142,12 @@ Differenzialgleichung
   \tau \ddx y &= \alpha y - \alpha c_n x^n
                 \label{eq:numODE:poly:mod}
 \end{align}
-ermittelt. Die Störung der Differenzialgleichung bleibt klein, wenn
-wir uns nicht zu weit hinaus wagen, das heißt, wenn wir die
+ermittelt. Die Störung $-ac_nx^n$ der Differenzialgleichung bleibt klein, wenn
+wir uns nicht zu weit hinaus wagen, das heißt, wenn wir die gestörte
 Differenzialgleichung nur für kleine Werte von $x$ nutzen.
 
 Der Koeffizientenvergleich für den
-Polynomansatz~\eqref{eq:numODE:Poly} bei~\eqref{eq:numODE:poly:mod}
+Polynomansatz~\eqref{eq:numODE:poly:ansatz} bei~\eqref{eq:numODE:poly:mod}
 liefert anstelle von~\eqref{eq:numODE:xn} die immer erfüllte Gleichung
 $0=0$, die aus dem System gestrichen werden kann.
 
@@ -1162,27 +1162,42 @@ für $k=1,\ldots,n$, oder umgestellt nach $c_k$ die Gleichungen
 \end{align}
 In der letzten Form kann man die Gleichungen als rekursive
 Zuweisungskette interpretieren. Der Koeffizient $c_k$ wird aus dem
-vorhergehenden $c_{k-1}$ berechnet. durch Multiplikation mit $\alpha$ und
-Division durch $k$ berechnet.
+vorhergehenden $c_{k-1}$ berechnet.
 
-Der Koeffizient $c_0$ bleibt dabei frei wählbar. Aus~\eqref{eq:numODE:Poly} erkennt man, dass $c_0$ gerade der Wert von $y(x)$ für $x=0$ ist. (Im Beispiel unseres Entladevorgangs ist das die Anfangsspannung des Kondensators.)
+Der Koeffizient $c_0$ bleibt dabei frei
+wählbar. Aus~\eqref{eq:numODE:poly:ansatz} erkennt man, dass $c_0$ gerade der
+Wert von $y(x)$ für $x=0$ ist. (Im Beispiel unseres Entladevorgangs
+ist das die Anfangsspannung des Kondensators.)
 
 Wir können also zusätzlich 
 \begin{align*}
   c_0 &= y(0)
 \end{align*}
-schreiben.
+schreiben und den Anfangswert $y(0)$ frei vorgeben.
 
-Bei jedem Schritt $k=1,\ldots,n$ des Systems~\eqref{eq:numODE:coeffs} von Zuweisungen kommt ein Faktor $\alpha$ hinzu und es wird durch das aktuelle $k$ dividiert. So erhält man für die Koeffizienten die Berechnungsvorschrift
+Bei jedem Schritt $k=1,\ldots,n$ des Systems~\eqref{eq:numODE:coeffs}
+von Zuweisungen kommt ein Faktor $\alpha$ hinzu und es wird durch den
+aktuellen Index $k$ dividiert. So wird im Zähler $c_0$ so oft mit
+$\alpha$ multipliziert, wie die Zuweisung~\eqref{eq:numODE:coeffs}
+angewandt wird und im Nenner entsteht das Produkt aller Indizes bis
+$k$.  Auf diesem Weg erhält man für die Koeffizienten $c_k$ mit
+$k=1,2,\ldots,n$ die Berechnungsvorschrift
 \begin{align*}
   c_k &= \frac{\alpha^k y(0)}{k\cdot(k-1)\cdot\ldots\cdot 2\cdot 1}.
 \end{align*}
-\begin{align*}
-  y(x) &\approx y(0)\cdot\sum_{k=0}^{n} \frac{1}{k!} (\alpha x)^k
-\end{align*}
+Setzen wir diese Koeffizienten in den
+Ansatz~\eqref{eq:numODE:poly:ansatz} ein, ergibt sich die Lösung von \eqref{eq:numODE:poly:mod} in der Form
+\begin{align}
+  y(x) &= y(0)\cdot\sum_{k=0}^{n} \frac{1}{k!} (\alpha x)^k.
+         \label{eq:numODE:y:numApprox}
+\end{align}
+Diese Funktion wird als numerische Approximation der Lösung von \eqref{eq:numODE:example} interpretiert.
+
+In Abbildung~\ref{fig:poly:exp} sind die exakte Lösung von \eqref{eq:numODE:example} und die numerischen Approximationen~\eqref{eq:numODE:y:numApprox} dargestellt. Außerdem ist die Abweichung der numerischen Approximation von der exakten Lösung zu sehen.
+
 \begin{figure}[H]
   \centering
-  \begin{pspicture}(-0.5,-8)(10.5,5.5)
+  \begin{pspicture}(-0.5,-9)(10.5,5.5)
     %\psgrid
     \def\myRef{2.71828 x neg exp }
     \def\myApprox{
@@ -1218,6 +1233,7 @@ Bei jedem Schritt $k=1,\ldots,n$ des Systems~\eqref{eq:numODE:coeffs} von Zuweis
     }
     \def\myAlpha{-1.0 }    
     \def\myDegree{8 }
+    \psset{xAxisLabel=$x$,yAxisLabel=$y$}
     \rput[bl](0,0){\begin{psgraph}{->}(0,0)(4.5,1.5){10cm}{5cm}
         \psplot[linecolor=green]{0}{4}{
           \myRef
@@ -1230,13 +1246,14 @@ Bei jedem Schritt $k=1,\ldots,n$ des Systems~\eqref{eq:numODE:coeffs} von Zuweis
           \myApprox
         }
       \end{psgraph}}
+    \psset{yAxisLabel=Fehlerabweichung}
     \def\myErr{
       \myRef \myApprox sub
       abs
       dup 1e-9 le { pop 1e-7 } if
       log
     }
-    \rput[tl](0,-1){\begin{psgraph}[Oy=-5,ylogBase=10]{->}(0,-5)(0,-7.5)(4.5,1.0){10cm}{7cm}
+    \rput[tl](0,-2){\begin{psgraph}[Oy=-5,ylogBase=10]{->}(0,-5)(0,-7.5)(4.5,1.0){10cm}{7cm}
         \def\myDegree{8 }
         \psplot[linecolor=blue]{0}{4}{
           \myErr
@@ -1247,7 +1264,7 @@ Bei jedem Schritt $k=1,\ldots,n$ des Systems~\eqref{eq:numODE:coeffs} von Zuweis
         }
       \end{psgraph}}
   \end{pspicture}
-  \caption{Approximation der Differenzialgleichung $\ddt y = -y$}
+  \caption{Approximation der Differenzialgleichung $\ddt y = -y$; Oben: Lösung und numerischen Approximationen; Unten: Abweichung der numerischen Approximationen von der exakten Lösung (im logarithmischen Maßstab); {\color{green}Grün}: theoretische Lösung von \eqref{eq:poly}; {\color{blue}Blau}: Numerische Approximation der Lösung mit $n=8$; {\color{red}Rot}: Numerische Approximation der Lösung mit $n=10$.}
   \label{fig:poly:exp}
 \end{figure}
 \appendix
