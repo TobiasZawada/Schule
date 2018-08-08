@@ -1268,18 +1268,49 @@ In Abbildung~\ref{fig:poly:exp} sind die exakte Lösung von \eqref{eq:numODE:exa
   \label{fig:poly:exp}
 \end{figure}
 \appendix
-\section{Erweiterte Binomische Formel}
+\section{Verallgemeinerte Binomische Formel}
 \label{sec:extendedBinomial}
+Sicherlich habt ihr in der Schule bereits die binomische Formel
+$(a-b)\cdot(a+b) = a^2-b^2$ kennengelernt, von deren Gültigkeit man
+sich einfach durch Ausmultiplizieren überzeugt.
+
+Das Abspalten des Faktors $(a-b)$ geht auch bei Differenzen von
+höheren Potenzen als zwei. Genauer gilt für $n=2,3,\ldots$
+\begin{align*}
+  a^n - b^n &= (a-b) \cdot\l( \sum_{i=0}^{n-1} a^i b^{n-1-i}\r)
+\end{align*}
+Wie bei der quadratischen Variante kann man sich von der Richtigkeit
+dieser Gleichung durch Ausmultiplizieren der rechten Seite überzeugen.
+
+Das Distributivgesetz liefert zwei Summen.
 \begin{align*}
   (a-b)\cdot\l(\sum_{i=0}^{n-1} a^ib^{n-1-i}\r)
-  &= \sum_{i=0}^{n-1} a^{i+1}b^{n-1-i} - \sum_{i=0}^{n-1} a^i b^{n-i}\\
+  &= \sum_{i=0}^{n-1} a^{i+1}b^{n-1-i} - \sum_{i=0}^{n-1} a^i b^{n-i}
 \end{align*}
-$\bar i = i+1$
+Beim Minuend kommt ein Faktor $a$ hinzu und beim Subtrahend ein Faktor $b$.
+
+Die Summenglieder des Subtrahenden heben die des Minuenden ab Index
+$i=1$ auf.
+
+Das sieht man besonders einfach, wenn man durch die
+Indextransformation $\bar i = i+1$ die Potenzen im Minuenden an die im
+Subtrahenden angleicht
 \begin{align*}
-  &= \sum_{\bar i = 1}^n a^{\bar i} b^{n-\bar i} - \sum_{i=0}^{n-1} a^i b^{n-i}\\
+  &= \sum_{\bar i = 1}^n a^{\bar i} b^{n-\bar i} - \sum_{i=0}^{n-1} a^i b^{n-i}
+\end{align*}
+Nennen wir den Index $\bar i$ in $i$ um, erhalten wir mit
+\begin{align*}
+  &= \sum_{i = 1}^n a^{i} b^{n-i} - \sum_{i=0}^{n-1} a^i b^{n-i}
+\end{align*}
+zwei Summen als Minuend und Subtrahend, bei denen sich alle
+Summanden gegenseitig aufheben, bis auf diejenigen mit Index $i=0$
+und $i=n$:
+\begin{align*}
   &= \underbrace{a^n}_{\bar i=n} + \underbrace{\l(\sum_{i=1}^{n-1} a^i b^{n-i} - a^i b^{n-i}\r)}_{=0} - \underbrace{b^n}_{i=0}\\
   &= a^n - b^n
 \end{align*}
+Übrig bleiben nur die zwei Summanden, die wir laut der verallgemeinerten binomischen
+Formel erwarten. Womit sich diese Formel bestätigt.
 \end{document}
 
 %%% Local Variables:
