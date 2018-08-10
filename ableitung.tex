@@ -3,7 +3,7 @@
 \usepackage{hyperref}
 \fi
 \usepackage[fleqn]{amsmath}
-\usepackage{amsfonts}
+\usepackage{amsfonts,amssymb}
 \usepackage{float}
 \usepackage[DIV15]{typearea}
 \usepackage[utf8]{inputenc}
@@ -368,7 +368,7 @@ Wir können den Differenzenquotienten~\eqref{eq:limit:secant:slope} nur
 an Stellen $x_2$ ungleich $x_1$ auswerten und müssen deshalb bei jeder
 konkreten Auswertung von $\frac{\Delta f}{\Delta x}(x_1,x_2)$ eine
 absolute Abweichung
-$|\ddx f(x_1) - \frac{\Delta f}{\Delta x}(x_1,x_2)|$ größer Null
+$\l|\ddx f(x_1) - \frac{\Delta f}{\Delta x}(x_1,x_2)\r|$ größer Null
 zulassen.
 
 \begin{Def}
@@ -378,7 +378,7 @@ zulassen.
   Abweichung $|\ddx f(x_1) - \frac{\Delta f}{\Delta x}(x_1,x_2)|$
   nicht größer als $\eps$ wird, wenn wir uns auf Stellen $x_2$
   ungleich $x_1$ beschränken, die einen (von $\eps$ abhängigen)
-  Maximalabstand $\delta$ von $x_1$ haben.
+  Maximalabstand $\delta>0$ von $x_1$ haben.
 \end{Def}
 
 Als Beispiel ermitteln wir die Ableitung von $f(x)=x^2$ an der Stelle $x=x_1:=0.5$.
@@ -488,14 +488,14 @@ $x=0$ auswertbar.
 Jedoch wird der Betrag von $\sin\l(\frac1x\r)$ nicht größer als
 $1$. Damit ist der Betrag von $f(x)=x\cdot\sin\l(\frac1x\r)$ durch
 $|x|$ beschränkt. Da $|x|$ bei Annäherung von $x$ an 0 den Grenzwert
-$0$ hat, erwarten wir dass bei $|f(x)|$ auch der Fall ist.  Geben wir
+$0$ hat, erwarten wir, dass das bei $|f(x)|$ auch der Fall ist.  Geben wir
 uns eine beliebig knapp über 0 liegende Fehlerschranke $\eps$ vor und
 untersuchen, für welchen Maximalabstand $\delta$ wir absichern können,
-dass die Abweichung $|f(x)|$ nicht größer als $\eps$ wird.
+dass die Abweichung $|f(x)|$ nicht größer als $\eps$ wird:
 \begin{align*}
   |f(x)-F| &= \l|x\cdot\sin\l(\frac1x\r) - 0\r|\\
            &\leq|x|\l|\sin\l(\frac1x\r)\r|\\
-           &\leq |x|
+           &\leq |x|\quad\text{ (unter Berücksichtigung von $\l|\sin\l(\frac1x\r)\r|\leq 1$)}
 \end{align*}
 Wir können also die maximale Abweichung $\delta$ für $|x|$ gleich der
 vorgegebenen Fehlerschranke $\eps$ wählen, damit diese nicht von
@@ -555,22 +555,15 @@ Maximalstellen für $\sin(1/x)$ mit Abstand von Null, der kleiner als
 der vorgegebene Abstand $\delta$ ist.
 
 Jeder Versuch einen Grenzwert $F$ für $f$ bei Annäherung von $x$ an 0
-zu konstruieren scheitert, denn diese Zahl $F$ hätte entweder bei
-einem lokalen Minimum oder bei einem lokalen Maximum einen Abstand von mindestens $0.5$.
+zu konstruieren scheitert, denn für diese Zahl $F$ wäre der Fehler entweder bei
+einem lokalen Minimum oder bei einem lokalen Maximum mindestens $0.5$ groß.
 
 \subsection{Grenzwertsätze}
 \label{sec:limit:theorems}
-Seien $\alpha$ und $\beta$ zwei reelle Konstanten.  Konvergieren zwei
-Funktionen $f(x)$ und $g(x)$ bei Annäherung von $x$ an eine Stelle $X$
-gegen Grenzwerte $F$ beziehungsweise $G$, so konvergieren auch
-$f(x)\cdot g(x)$ und $\alpha\cdot f(x)+\beta\cdot g(x)$ gegen
-$F\cdot G$ beziehungsweise $\alpha F +\beta G$.
-
 \paragraph{Produkt}
 Konvergieren zwei Funktionen $f(x)$ und $g(x)$ bei Annäherung von $x$
 an eine Stelle $X$ gegen Grenzwerte $F$ beziehungsweise $G$, so
-konvergiert auch $f(x)\cdot g(x)$ gegen $F\cdot G$ beziehungsweise
-$\alpha F +\beta G$.
+konvergiert das Produkt $f(x)\cdot g(x)$ gegen $F\cdot G$.
 
 Wir geben uns zunächst eine Fehlerschranke $\bar\eps>0$ für $f$ und
 $g$ als Variable vor.  In Abhängigkeit von $\bar\eps$ finden wir eine
@@ -611,6 +604,7 @@ hinzu. In dem entstehenden Term $|f(x)-F+F|$ können wir $|f(x)-F|$ und
 $|F|$ abschätzen.
 \begin{align*}
   &= |f(x)-F+F|\cdot |g(x) - G | + |f(x)-F|\cdot |G|\\
+  &= \l(|f(x)-F| + |F|\r)\cdot |g(x) - G | + |f(x)-F|\cdot |G|\\
   &\leq (\bar\eps + |F|)\cdot\bar\eps + \bar\eps |G|=:\eps.
 \end{align*}
 Letztendlich erhalten wir eine Gleichung mit der wir aus der
@@ -618,7 +612,11 @@ Fehlertoleranz $\bar\eps$ für $f$ und $g$ eine Fehlertoleranz $\eps$
 für das Produkt $f\cdot g$ berechnen können.
 
 Wir können auch $\eps$ vorgeben und das nötige $\bar\eps$ daraus
-berechnen, wenn wir die Gleichung nach $\bar\eps$ auflösen:
+berechnen, wenn wir die Gleichung
+\begin{align*}
+  (\bar\eps + |F|)\cdot\bar\eps + \bar\eps |G|=\eps
+\end{align*}
+nach $\bar\eps$ auflösen:
 \begin{align*}
   {\bar\eps}^2 + \l(|F|+|G|\r)\bar\eps -\eps &= 0\\
   \bar\eps&= -\frac{|F|+|G|}2 + \sqrt{\l(\frac{|F|+|G|}2\r)^2 + \eps}
@@ -628,15 +626,15 @@ Wurzel zu einer negativen Lösung führt, die sich nicht als
 Fehlertoleranz eignet.
 
 Für $\bar\eps$ gibt es Maximalabstände $\delta_f$ und $\delta_g$,
-so dass Toleranzschranken $|f(x)-F|\leq \eps_f$ und
-$|g(x)-G|\leq \eps_g$ eingehalten werden.
+so dass Toleranzschranke $|f(x)-F|\leq \bar\eps$ und
+$|g(x)-G|\leq \bar\eps$ eingehalten wird.
 
 Wir nutzen den kleineren Maximalabstand
-$\delta:=\min(\delta_f,\delta_g)$ um die zugehörige Fehlerschranken
-für $|f(x)-F|\leq \bar\eps$, $|g(x)-G|\leq\bar\eps$ und somit auch für
-$|f(x)g(x)-FG|\leq\eps$ zu erfüllen.
+$\delta:=\min(\delta_f,\delta_g)$ um die Fehlerschranke $\bar\eps$ für
+$f$ und $g$ zu erfüllen. Somit ist auch die Fehlerschranke $|f(x)g(x)-FG|\leq\eps$
+erfüllt.
 
-Zusammenfassend gesagt, finden wir also zu einer vorgegebenen
+Zusammenfassend gesagt, finden wir zu einer vorgegebenen
 Fehlerschranke $\eps$ eine Maximalabweichung $\delta$, so dass für
 alle Argumente $x$ mit $|x-X|\leq \delta$ die Ungleichung
 $|f(x)g(x)-FG|\leq\eps$ erfüllt ist. Das Produkt $f(x)g(x)$ hat also
@@ -651,7 +649,8 @@ $\alpha\cdot f(x)+\beta\cdot g(x)$ gegen den Grenzwert $\alpha\cdot F+\beta\cdot
 Für den uninteressanten Fall $\alpha=\beta=0$ ist klar, dass der
 Grenzwert von $\alpha f(x) + \beta g(x)$ Null ist.  Nehmen wir jetzt
 also an, dass mindestens eine der Zahlen $\alpha$ und $\beta$ von Null
-verschieden ist.
+verschieden ist. Wir gehen bei der Fehlerabschätzung für
+$\alpha f(x) + \beta g(x)$ analog zu der beim Produkt vor:
 \begin{align*}
   |\alpha f(x) + \beta g(x) - (\alpha F + \beta G)| &= |\alpha (f(x)-F) + \beta (g(x)-G)|\\
                                                     &\leq |\alpha|\cdot |f(x)-F| + |\beta|\cdot |g(x) - G|\\
@@ -676,23 +675,23 @@ Linearkombination ist somit die Linearkombination der Grenzwerte $F$ und $G$.
 Für den Differenzenquotient $\DDx f(x_1,x_2)$ der quadratischen
 Funktion $f(x)=x^2$ haben wir in Abschnitt~\ref{sec:limit:ddx} die
 nennerfreie Berechnungsvorschrift $\DDx f(x_1,x_2)=x_2+x_1$ gefunden
-(siehe Gleichung~\eqref{eq:limit:DDxf}).  Die Auswertung der rechten
-Seite an der Stelle $x_2=x_1$ hat uns zur Vermutung geführt, dass für
+(siehe Gleichung~\eqref{eq:limit:DDxf}).  Die Auswertung der nennerfreien rechten
+Seite $x_2+x_1$ an der Stelle $x_2=x_1$ hat uns zur Vermutung geführt, dass für
 die Ableitung $\ddx f(x_1) = 2x_1$ gilt.
 
 In diesem Abschnitt sehen wir, dass $g(x_2)=x_2+x_1$ ein Beispiel für
-eine an der Stelle $x_1$ stetige Funktion. Bei diesen Funktionen kann
-man den Grenzwert an der Stelle $x_2=x_1$ einfach durch Einsetzen von
-$x_1$ berechnen.
+eine an der Stelle $x_1$ \emph{stetige} Funktion ist. Bei Funktionen mit
+dieser schönen Eigenschaft kann man den Grenzwert an der Stelle
+$x_2=x_1$ einfach durch Einsetzen von $x_1$ berechnen.
 
 \begin{Def}
-  Sei $g(x)$ eine reelle Funktion in Abhängigkeit eines reellen
-  Arguments $x$. Die Funktion~$g(x)$ ist an einer Stelle $X$ \emph{stetig},
-  wenn der Grenzwert von $g(x)$ bei Annäherung von $x$ an $X$ gleich
-  $g(X)$ ist.
+  Sei $f(x)$ eine reelle Funktion in Abhängigkeit eines reellen
+  Arguments $x$. Die Funktion~$f(x)$ ist an einer Stelle $X$ \emph{stetig},
+  wenn der Grenzwert von $f(x)$ bei Annäherung von $x$ an $X$ gleich
+  $f(X)$ ist.
 
-  Ist $g(x)$ an allen Stellen $X$ stetig, so wird $g(x)$ einfach nur
-  als stetig bezeichnet.
+  Ist $f(x)$ an allen Stellen $X$ ihres Definitionsbereiches stetig,
+  so wird $f(x)$ einfach nur als stetig bezeichnet.
 \end{Def}
 
 Lineare Funktionen
@@ -702,25 +701,28 @@ Lineare Funktionen
 sind stetig. Um uns davon zu überzeugen müssen wir nach der
 Grenzwertdefinition zu jeder Fehlerschranke $\eps$ einen
 Maximalabstand $\delta$ mit $|f(x)-f(X)|\leq \eps$ für alle $x$ mit
-$|x-X|\leq \delta$ finden.
-Ist $p_1$ gleich null, so ist der Fehler $|f(x)-f(X)|$ unabhängig von $x$ und $X$ gleich null, der Grenzwert ist also $f(X)$.
+$|x-X|\leq \delta$ finden.  Ist $p_1$ gleich null, so ist der Fehler
+$|f(x)-f(X)|$ unabhängig von $x$ und $X$ gleich null, der Grenzwert
+ist also $f(X)$.
 
-Für den Fall $p_1\neq 0$ nutzen wir $\delta =\frac{\eps}{|p_1|}$ als Maximalabstand für den die Fehlerschranke $\eps$ eingehalten wird:
+Für den Fall $p_1\neq 0$ nutzen wir $\delta =\frac{\eps}{|p_1|}$ als
+Maximalabstand für den die Fehlerschranke $\eps$ eingehalten wird:
 \begin{align*}
   |f(x)-f(X)| = |p_0+p_1 x - (p_0+p_1X)| &= |p_1|\cdot|x-X|\leq |p_1|\frac{\eps}{|p_1|} = \eps
 \end{align*}
 Lineare Funktionen sind also stetig.
 
-Nach Abschnitt~\ref{sec:limit:theorems} ist der Grenzwert eines Produkts
-gleich dem Produkt der Grenzwerte ist und der Grenzwert einer
-Linearkombination gleich der Linearkombination der Grenzwerte.
+Seien zwei an der Stelle $X$ stetige Funktionen $f(x)$ und $g(x)$
+gegeben.  Nach Abschnitt~\ref{sec:limit:theorems} ist der Grenzwert
+des Produkts $f(x)\cdot g(x)$ gleich dem Produkt der Grenzwerte
+$f(X)\cdot g(X)$ und der Grenzwert einer Linearkombination
+$\alpha f(x) + \beta g(x)$ gleich der Linearkombination der Grenzwerte
+$\alpha f(X) + \beta g(X)$. Die Stetigkeit der Funktionen $f$ und $g$
+überträgt sich also auf ihr Produkt und ihre Linearkombinationen.
 
 Die Stetigkeit der Potenzfunktionen $f(x)=x^n$ für $n=0,1,2,\ldots$
 ergibt sich daraus, dass diese als Produkte der linearen Funktion
 $g(x)=x$ mit sich selber darstellbar sind.
-
-Polynomfunktionen $p(x) = p_0+p_1\cdot x + \ldots + p_n x^n$ sind als
-Linearkombinationen von Potenzfunktionen ebenfalls stetig.
 
 \section{Polynome}
 \subsection{Monome und Polynome}
@@ -759,6 +761,14 @@ der Schule gehabt.  Beispielsweise ist $p(x)=1 + \frac 72x-\frac32x^2$
 das im nächsten Abschnitt berechnete
 Interpolationspolynom~\eqref{eq:interpol:px012} mit $p_0=1$,
 $p_1=\frac72$ und $p_2=-\frac32$.
+
+Polynomfunktionen $p(x) = p_0+p_1\cdot x + p_2 \cdot x^2 + \ldots + p_n x^n$ sind als
+Linearkombinationen von Potenzfunktionen ebenfalls stetig.
+
+Der Grenzwert einer Polynomfunktion $p(x)$ bei Annäherung von $x$ an
+eine Stelle $X$ kann also immer durch Auswertung $p(X)$ des Polynoms an der
+Stelle $X$ berechnet werden.
+
 \subsection{Polynominterpolation}
 \label{sec:interpol}
 Zur Erstellung eines Höhenprofils eines Berges wird an einer Reihe von
@@ -777,10 +787,11 @@ $(x_k,y_k)$ mit $k=0,\ldots,n$ verbindet, muss $p(x)$ an den Stellen $x_k$ die W
 \begin{align*}
   p(x_k) = y_k
 \end{align*}
-für $k=0,\ldots,n$. Hat man die Funktion $p(x)$
-konstruiert, kann man sie auch an anderen Stellen als
-$x=x_0,\ldots,x_n$ auswerten. Die Konstruktion der Funktion $p(x)$ und
-die Auswertung zwischen den vorgegebenen Stellen bezeichnet man als \emph{Interpolation}.
+für $k=0,\ldots,n$. Nach der Konstruktion der Funktion $p(x)$, kann
+man diese auch an anderen Stellen als $x=x_0,\ldots,x_n$
+auswerten. Die Konstruktion der Funktion $p(x)$ und die Auswertung
+zwischen den vorgegebenen Stellen bezeichnet man als
+\emph{Interpolation}.
 
 Am Häufigsten nutzt man Polynome als glatte Funktion $p(x)$ bei der
 Interpolation.
@@ -889,13 +900,29 @@ durch kleine blaue Punkte gekennzeichnet.
     $(x_1,y_1)=(1,3)$ und $(x_2,y_2)=(2,2)$}
   \label{fig:interpol:example}
 \end{figure}
-\subsection{Differenzialquotienten von Polynomen}
+\section{Differenzialquotienten von Polynomen}
 In Abschnitt~\ref{sec:poly} haben wir Polynome
 \begin{align*}
   p(x) &= \sum_{i=0}^n p_i x^i
 \end{align*}
 als Linearkombinationen von Monomen $x^0, x^1,\ldots$ kennengelernt.
+Die Nützlichkeit von Polynomen für die Interpolation hat sich in
+Abschnitt~\ref{sec:interpol} erwiesen.
+
+Dort stand die Aufgabe, aus Stellen $x_0,x_1,\ldots,x_n$ mit
+zugehörigen Höhenangaben $y_0,y_1,\ldots,y_n$ ein glattes Höhenprofil
+eines Berges zu erstellen.
+
+Ob man mit einem bestimmten Fahrzeugtyp den Berg überwinden kann,
+hängt von seiner maximalen Steigung ab.
+
+Aus den diskreten Höhenmessungen kann man die Steigung des Berges
+approximieren, indem man den Differenzialquotient des mit Polynomen
+interpolierten Höhenprofils bestimmt. Die Berechnung des
+Differenzialquotients von Polynomen ist Inhalt dieses Hauptabschnittes.
+
 \subsection{Differenzialquotienten von linearen Funktionen und Monomen}
+\label{sec:limit:monom}
 In der Einleitung wurde der Differenzialquotient als Anstieg der
 Tangenten eingeführt. Lineare Funktionen beschreiben Geraden, bei
 denen der Anstieg konstant ist.
@@ -935,16 +962,22 @@ aus der sich der Nenner herauskürzt:
   \DDx f(x_1,x_2)&= \sum_{i=0}^{n-1} x_2^ix_1^{n-1-i}
 \end{align*}
 Die rechte Seite in der letzten Darstellung des Differenzenquotienten
-ist an der Stelle $x_2=x_1$ stetig.  Wir können den
-Differenzialquotient also durch Auswertung der rechten Seite an der
-Stelle $x_2=x_1$ berechnen:
+ist ein Polynom in der Variable $x_2$ und damit an der Stelle
+$x_2=x_1$ stetig.  Wir können den Differenzialquotient also durch
+Auswertung der rechten Seite an der Stelle $x_2=x_1$ berechnen:
 \begin{align}
-  \ddx f(x_1) &= \sum_{i=0}^{n-1} \underbrace{x_1^i x_1^{n-1-i}}_{\text{$n$-mal $x_1^{n-1}$}} \\
+  \ddx f(x_1) &= \sum_{i=0}^{n-1} \underbrace{x_1^i x_1^{n-1-i}}_{\text{$n$-mal $x_1^{n-1}$}}
+\end{align}
+Zuletzt fassen wir die rechts stehenden Summenterme zusammen.
+Da wir jetzt nur noch ein Argument zu berücksichtigen haben, können wir dabei $x_1$ auch in $x$ umbenennen:
+\begin{align}
   \ddx f(x) &= n x^{n-1}\label{eq:diff:monom}
 \end{align}
-Die letzte Gleichung ist eigentlich nur für $n=2,3,\ldots$ anwendbar,
-da für $x=0$ in den Fällen $n=0$ und $n=1$ auf die nicht definierten
-Terme $0\cdot\frac{1}{0}$ beziehungsweise $1\cdot 0^0$ führt.
+Die letzte Gleichung ist streng genommen nur für $n=2,3,\ldots$
+anwendbar, da sie für $x=0$ in den Fällen $n=0$ und $n=1$ auf die
+nicht definierten Terme $0\cdot\frac{1}{0}$ beziehungsweise
+$1\cdot 0^0$ führt. Das ist einer der Gründe dafür, dass wir lineare
+Funktionen vorher separat behandelt haben.
 
 Jedoch wird, wie bei der Einführung des Summenzeichens in
 Abschnitt~\ref{sec:poly} zur Vereinfachung der Schreibweise zumindest
@@ -958,11 +991,10 @@ wichtig. Abschnitt~\ref{sec:poly:ddx} wird uns einen Eindruck davon
 vermitteln, wenn wir mit Hilfe der Linearität Differenzialquotienten
 von Polynomen auf Differenzialquotienten von Monomen zurückführen.
 
-In diesem Abschnitt werden wir uns zuerst anschauen, was die
-Linearität des Differenzialquotienten bedeutet soll. Danach überzeugen
-wir uns davon sich, dass Differenzenquotienten ebenfalls linear sind
-und dass sich diese Eigenschaft durch Grenzwertbildung auf
-Differenzialquotienten überträgt.
+In diesem Abschnitt schauen wir uns zuerst an, was die Linearität des
+Differenzialquotienten bedeutet soll. Danach überzeugen wir uns davon,
+dass Differenzenquotienten linear sind und dass sich diese Eigenschaft
+durch Grenzwertbildung auf Differenzialquotienten überträgt.
 
 Seien $\alpha$, $\beta$ reelle Konstanten und $f(x)$, $g(x)$ reelle
 Funktionen, die an der Stelle $x$ differenzierbar sind.
@@ -1000,52 +1032,58 @@ Somit hat sich die Linearität des Differenzialquotienten bestätigt.
 \label{sec:poly:ddx}
 In Abschnitt~\ref{sec:poly} wurden Monome als Potenzfunktionen $x^n$
 mit $n=0,1,2,\ldots$ eingeführt, wobei $x^0=1$ gesetzt wird unabhängig
-davon dass $x$ auch null werden kann.
+davon, dass $x$ auch null werden kann.
 Polynome sind Linearkombinationen
 \begin{align*}
   p(x)&=p_0+p_1x+\ldots+p_nx^n 
-  \intertext{oder mit Summenschreibweise}
-  p(x)&=\sum_{i=0}^n p_i x^i
 \end{align*}
 von Monomen mit konstanten Koeffizienten $p_0,p_1,\ldots,p_n$.
+Mit dem Summenzeichen lautet dieselbe Gleichung
+\begin{align*}
+  p(x)&=\sum_{i=0}^n p_i x^i.
+\end{align*}
 
-Die Ableitungen $\ddx{}\left(x^n\right) = n\cdot x^{n-1}$ für
-$n=1,2,\ldots$ von Monomen haben wir in Abschnitt~\ref{sec:poly:ddx}
-kennengelernt. Dabei interpretieren wir $\frac{0}{x}=0$ und $x^0 = 1$
-unabhängig davon, dass $x$ auch null werden kann.
+Für den Differenzialquotient von Monomen $x^n$ mit $n=1,2,\ldots$
+haben wir bereits in Abschnitt~\ref{sec:poly:ddx} die Gleichung
+$\ddx{}\left(x^n\right) = n\cdot x^{n-1}$ hergeleitet. Dabei nutzen
+wir die Festlegung $x^0 = 1$ unabhängig davon, dass $x$ auch null
+werden kann.
 
 In Abschnitt~\ref{sec:ddx:linearity} haben wir uns davon überzeugt,
-dass der Differenzenquotient eine lineare Operation darstellt, dass
-also der Differenzialquotient einer Linearkombination
+dass der Differenzenquotient eine lineare Operation darstellt. Damit
+ist der Differenzialquotient einer Linearkombination
 differenzierbarer Funktionen gleich der Linearkombination der
-Differenzialquotienten der Funktionen ist.
+Differenzialquotienten der Funktionen.
 
 Die Formel für die Ableitung von Polynomen ist jetzt nur noch ein
 Zusammensetzen all dieser Bausteine.
 
-Da die Monome differenzierbar sind und die Polynome Linearkombination
+Da die Monome differenzierbar sind und die Polynome Linearkombinationen
 von Monomen, ist die Ableitung von Polynomen gerade die zugehörige
 Linearkombination der Differenzialquotienten der eingehenden Monome.
 
-Wir gehen von der Summenform eines Polynoms aus.
-\begin{align*}
+Gesagt, getan. Wir gehen von der Darstellung eines Polynoms mit dem Summenzeichen aus:
+\begin{align}
   p(x) = \sum_{i=0}^n p_i x^i
-\end{align*}
-De Differenzialquotient des Konstantanteils $p_0$ ist null. Das
+  \label{eq:limit:poly}
+\end{align}
+Der Differenzialquotient des Konstantanteils $p_0$ ist null. Das
 berücksichtigen wir, indem wir die Summe für den Differenzialquotient
 des Polynoms erst ab $1$ laufen lassen. Die Differenzialquotienten der
-anderen Monome haben wir uns eben angesehen.
+anderen Monome $x^i$ mit $i=1,2,\ldots$ sind $i\cdot x^{i-1}$. Das
+haben wir uns eben in Abschnitt~\ref{sec:limit:monom} angesehen.
+
+Wenden wir das auf die verbleibenden Monome in Gleichung
+\eqref{eq:limit:poly} an, erhalten wir die endgültige Formel
 \begin{align*}
-  \ddx p(x) = \sum_{i=1}^n p_i i x^{i-1}.
+  \ddx p(x) = \sum_{i=1}^n p_i i x^{i-1}
 \end{align*}
-\subsection{Numerische Lösung von Differenzialgleichungen}
+für die Ableitung des Polynoms $p(x)$ aus Gleichung \eqref{eq:limit:poly}.
+\section{Numerische Lösung von Differenzialgleichungen}
 \label{sec:numODE}
 Zur Lösung von Differenzialgleichungen, wie wir sie im
 Einleitungsabschnitt kennengelernt haben, gibt es viele numerische
-Verfahren.
-
-Ein Großteil dieser Verfahren nutzt Polynominterpolation oder
-Polynomapproximation.
+Verfahren und ein Großteil dieser Verfahren nutzt Polynominterpolation.
 
 Wir lösen die Differenzialgleichung
 \begin{align}
@@ -1062,88 +1100,96 @@ Entladevorgang eines RC-Gliedes.
 Wir nutzen bei dem numerischen Verfahren aus, dass sich der Betrag von
 $x^n$ stark verkleinert, wenn der Betrag von $x$ kleiner wird. Nutzen
 wir zum Beispiel $x$ nur im Bereich von $-0.1$ bis $0.1$, so ändert
-sich zum Beispiel $x^5$ nur im Bereich von $-0.00001$ bis $-0.00001$.
+sich $x^5$ nur im Bereich von $-0.00001$ bis $0.00001$.
 
 Davon lassen wir uns leiten und setzen für $y(x)$ in Gleichung~\eqref{eq:numODE:example} den polynomialen Ansatz
 \begin{align}
-  y(x) &= \sum_{k=0}^n c_k x^k
+  y(x) &= \sum_{i=0}^n p_i x^i
          \label{eq:numODE:poly:ansatz}
 \end{align}
-ein. Wir gleichen dann die bisher noch freien Koeffizienten $c_k$ so
+ein. Wir gleichen dann die bisher noch freien Koeffizienten $p_i$ so
 ab, dass die Gleichung für so viele Potenzen niedrigen Grades erfüllt
 wird, wie es möglich ist. Den Fehler in den höheren Potenzen von $x$
-vernachlässigen wir. Wir wissen ja bereits, dass dieser Fehler sehr
-klein wird, wenn wir den Betrag von $x$ hinreichend klein wählen.
+vernachlässigen wir. Dieser Fehler wird sehr klein, wenn die
+Exponenten der vernachlässigten Potenzen groß sind und wir den Betrag
+von $x$ hinreichend klein wählen.
 
 Einsetzen des Ansatzes~\eqref{eq:numODE:poly:ansatz} in Gleichung~\eqref{eq:numODE:example} liefert:
 \begin{align*}
-  \ddx{}\l(\sum_{k=0}^n c_k x^k\r) &=\alpha\l(\sum_{k=1}^n c_k x^k\r)
+  \ddx{}\l(\sum_{i=0}^n p_i x^i\r) &=\alpha\l(\sum_{i=1}^n p_i x^i\r)
 \end{align*}
-
-Auf der linken Seite wenden wir die Differenziation auf das Polynom an:
-\begin{align*}
-  \sum_{k=1}^n c_k k x^{k-1} &= \sum_{k=0}^n  \alpha c_k x^k
-\end{align*}
+Auf der linken Seite wenden wir die Differenziation auf das Polynom an und erhalten
+\begin{align}
+  \sum_{i=1}^n p_i i x^{i-1} &= \sum_{i=0}^n  \alpha p_i x^i.
+                               \label{eq:numODE:coeffMatching}
+\end{align}
 Hier sei noch einmal daran erinnert, dass beim Differenzieren der
-erste Summand $c_0x^0=c_0$ von $\sum_{k=0}^n c_kx^k$
+erste Summand $p_0x^0=p_0$ von $\sum_{i=0}^n p_kx^i$
 herausfällt. Deshalb fängt die Summe erst bei Index 1 an. Für einen
 Vergleich der Koeffizienten zu den Potenzen von $x$ ist es günstiger,
 wenn links und rechts die selben Potenzen von $x$ stehen. Deshalb
-ersetzen wir auf der rechten Seite den Exponenten $k$ durch einen
-neuen Index $\bar k-1$. Aus $\bar k-1 = k$ ergibt sich $\bar k=k+1$.
+ersetzen wir auf der rechten Seite den Exponenten $i$ durch einen
+neuen Index $\bar i-1$. Die spezielle Wahl der Ersetzung erweist sich
+zuletzt als günstig. Aus $\bar i-1 = i$ ergibt sich $\bar i=i+1$. Das
+benutzt man zum Beispiel bei der Berechnung des neuen Startindex
+$\bar i=i+1 = 0+1 = 1$ und Endindex $\bar i = i + 1 = n+1$ für die
+Summe auf der rechten Seite von~\eqref{eq:numODE:coeffMatching}. Nach
+der Indexersetzung hat Gleichung~\eqref{eq:numODE:coeffMatching}
+insgesamt die Form
 \begin{align*}
-  \sum_{k = 1}^{n} c_k k x^{k-1} = \sum_{\bar k=1}^{n+1}  \alpha c_{\bar k-1} x^{\bar k-1}
+  \sum_{i = 1}^{n} p_i i x^{i-1} = \sum_{\bar i=1}^{n+1}  \alpha p_{\bar i-1} x^{\bar i-1}.
 \end{align*}
-Die Zählvariable $\bar k$ ist der Summationsindex der Summe auf der
-rechten Seite, für den wir uns den Namen selber aussuchen können,
+Die Zählvariable $\bar i$ ist der neue Summationsindex der Summe auf
+der rechten Seite, für den wir uns den Namen selber aussuchen können,
 solange er nicht mit bereits in der Summe vorkommenden Variablennamen
-kollidiert. Wir bezeichnen ihn wieder mit $k$, damit der Vergleich der
+kollidiert. Wir bezeichnen ihn wieder mit $i$, damit der Vergleich der
 in beiden Summen auftretenden Potenzen von $x$ einfacher wird.
 
 Bei der entstehenden Gleichung
 \begin{align}
-  \sum_{k = 1}^{n} c_k k x^{k-1} = \sum_{k=1}^{n+1}  \alpha c_{k-1} x^{k-1}
+  \sum_{i = 1}^{n} p_i i x^{i-1} = \sum_{i=1}^{n+1}  \alpha p_{i-1} x^{i-1}
   \label{eq:numODE:poly}
 \end{align}
-können wir die Koeffizienten der Potenzen $x^{k-1}$ für $k=1,\ldots,n$
-abgleichen. Die Koeffizienten zu $x^{k-1}$ für $k=1,\ldots,n$ auf der
-linken und rechten Seite der Gleichung sind $c_k k$ beziehungsweise
-$\alpha c_{k-1}$. Die Gleichungen für deren Abgleich lauten
+können wir die Koeffizienten der Potenzen $x^{i-1}$ für $i=1,\ldots,n$
+abgleichen. Die Koeffizienten von $x^{i-1}$ für $i=1,\ldots,n$ auf der
+linken und rechten Seite der Gleichung sind $p_i i$ beziehungsweise
+$\alpha p_{i-1}$. Die Gleichungen für deren Koeffizientenabgleich der
+Potenzen in \eqref{eq:numODE:poly} lauten
 \begin{align*}
-  k c_{k} &= \alpha c_{k-1}.
+  i p_{i} &= \alpha p_{i-1}\quad\text{ für }i=1,\ldots,n
 \end{align*}
 Der Koeffizientenabgleich für die höchste Potenz $x^n$ in
 Gleichung~\eqref{eq:numODE:poly} liefert die Gleichung
 \begin{align*}
-  0 &= \alpha c_n
+  0 &= \alpha p_n
 \end{align*}
-Damit erhält man das Gleichungssystem
+Damit erhält man insgesamt das Gleichungssystem
 \begin{align}
-  1\cdot c_1 &= \alpha c_0\label{eq:numODE:x0}\\
-  2\cdot c_2 &= \alpha c_1\\
+  1\cdot p_1 &= \alpha p_0\label{eq:numODE:x0}\\
+  2\cdot p_2 &= \alpha p_1\\
              &\vdots\\
-  n\cdot c_{n} &= \alpha c_{n-1}\label{eq:numODE:xn1}\\
-  0 &= \alpha c_n\label{eq:numODE:xn}
+  n\cdot p_{n} &= \alpha p_{n-1}\label{eq:numODE:xn1}\\
+  0 &= \alpha p_n\label{eq:numODE:xn}
 \end{align}
-für die Koeffizienten $c_k$.
+für die Koeffizienten $p_i$.
 
 Dieses Gleichungssystem ist von unten nach oben lösbar
-($c_n=0 \Rightarrow c_{n-1}=0 \Rightarrow \ldots\Rightarrow c_0 = 0$)
-und hat nur noch die Triviallösung, dass alle Koeffizienten $c_k$ null
+($p_n=0 \Rightarrow p_{n-1}=0 \Rightarrow \ldots\Rightarrow p_0 = 0$)
+und hat nur noch die Triviallösung, dass alle Koeffizienten $p_i$ null
 sind, also $y(x)=0$ gilt.
 
-Um nichttriviale Lösungen zu erhalten, vernachlässigen wir den
+Um nichttriviale Lösungen zu erhalten, vernachlässigen wir, wie bereits einleitend angesprochen, den
 Koeffizientenvergleich für die höchste Potenz.
 
 Das kann man zum Beispiel so interpretieren, dass man statt der Lösung
 für \eqref{eq:numODE:example} die exakte Lösung der leicht gestörten
 Differenzialgleichung
 \begin{align}
-  \tau \ddx y &= \alpha y - \alpha c_n x^n
+  \tau \ddx y &= \alpha y - \alpha p_n x^n
                 \label{eq:numODE:poly:mod}
 \end{align}
-ermittelt. Die Störung $-ac_nx^n$ der Differenzialgleichung bleibt klein, wenn
-wir uns nicht zu weit hinaus wagen, das heißt, wenn wir die gestörte
+ermittelt. Die Störung $-a p_nx^n$ der Differenzialgleichung bleibt klein, wenn
+wir uns nicht zu weit hinaus wagen. Das heißt, wenn wir die gestörte
 Differenzialgleichung nur für kleine Werte von $x$ nutzen.
 
 Der Koeffizientenvergleich für den
@@ -1153,45 +1199,51 @@ $0=0$, die aus dem System gestrichen werden kann.
 
 Es bleiben die Gleichungen
 \begin{align*}
-  k c_k &= \alpha c_{k-1}
+  i p_i &= \alpha p_{i-1}
 \end{align*}
-für $k=1,\ldots,n$, oder umgestellt nach $c_k$ die Gleichungen
+für $i=1,\ldots,n$, oder umgestellt nach $p_i$ die Gleichungen
 \begin{align}
-  c_k = \alpha\frac{c_{k-1}}k.
+  p_i = \alpha\frac{p_{i-1}}i.
   \label{eq:numODE:coeffs}
 \end{align}
 In der letzten Form kann man die Gleichungen als rekursive
-Zuweisungskette interpretieren. Der Koeffizient $c_k$ wird aus dem
-vorhergehenden $c_{k-1}$ berechnet.
+Zuweisungskette interpretieren. Der Koeffizient $p_i$ wird aus dem
+vorhergehenden $p_{i-1}$ berechnet.
 
-Der Koeffizient $c_0$ bleibt dabei frei
-wählbar. Aus~\eqref{eq:numODE:poly:ansatz} erkennt man, dass $c_0$ gerade der
+Der Koeffizient $p_0$ bleibt dabei frei
+wählbar. Aus~\eqref{eq:numODE:poly:ansatz} erkennt man, dass $p_0$ gerade der
 Wert von $y(x)$ für $x=0$ ist. (Im Beispiel unseres Entladevorgangs
 ist das die Anfangsspannung des Kondensators.)
 
 Wir können also zusätzlich 
 \begin{align*}
-  c_0 &= y(0)
+  p_0 &= y(0)
 \end{align*}
 schreiben und den Anfangswert $y(0)$ frei vorgeben.
 
-Bei jedem Schritt $k=1,\ldots,n$ des Systems~\eqref{eq:numODE:coeffs}
+Bei jedem Schritt $i=1,\ldots,n$ des Systems~\eqref{eq:numODE:coeffs}
 von Zuweisungen kommt ein Faktor $\alpha$ hinzu und es wird durch den
-aktuellen Index $k$ dividiert. So wird im Zähler $c_0$ so oft mit
+aktuellen Index $i$ dividiert. So wird im Zähler $p_0$ so oft mit
 $\alpha$ multipliziert, wie die Zuweisung~\eqref{eq:numODE:coeffs}
 angewandt wird und im Nenner entsteht das Produkt aller Indizes bis
-$k$.  Auf diesem Weg erhält man für die Koeffizienten $c_k$ mit
-$k=1,2,\ldots,n$ die Berechnungsvorschrift
+$i$.  Auf diesem Weg erhält man für die Koeffizienten $p_i$ mit
+$i=1,2,\ldots,n$ die Berechnungsvorschrift
 \begin{align*}
-  c_k &= \frac{\alpha^k y(0)}{k\cdot(k-1)\cdot\ldots\cdot 2\cdot 1}.
+  p_i &= \frac{\alpha^i y(0)}{1\cdot2\cdot\ldots\cdot (i-1)\cdot i}.
 \end{align*}
-Setzen wir diese Koeffizienten in den
-Ansatz~\eqref{eq:numODE:poly:ansatz} ein, ergibt sich die Lösung von \eqref{eq:numODE:poly:mod} in der Form
+Das Produkt $1\cdot 2\cdot\ldots\cdot (i-1)\cdot i$ bezeichnet man
+auch als Fakultät von $i$ und schreibt $i!:=1\cdot 2\cdot\ldots\cdot (i-1)\cdot i$.
+Damit bekommen die Koeffizienten $p_i$ für $i=1,\ldots,n$ die Form
 \begin{align}
-  y(x) &= y(0)\cdot\sum_{k=0}^{n} \frac{1}{k!} (\alpha x)^k.
+  p_i &= \frac{\alpha^i y(0)}{i!}.
+\end{align}
+Setzen wir diese Koeffizienten in den
+Ansatz~\eqref{eq:numODE:poly:ansatz} ein, ergibt sich die Polynomfunktion
+\begin{align}
+  y(x) &= y(0)\cdot\sum_{i=0}^{n} \frac{1}{i!} (\alpha x)^i,
          \label{eq:numODE:y:numApprox}
 \end{align}
-Diese Funktion wird als numerische Approximation der Lösung von \eqref{eq:numODE:example} interpretiert.
+die als numerische Approximation der Lösung von \eqref{eq:numODE:example} interpretiert wird.
 
 In Abbildung~\ref{fig:poly:exp} sind die exakte Lösung von \eqref{eq:numODE:example} und die numerischen Approximationen~\eqref{eq:numODE:y:numApprox} dargestellt. Außerdem ist die Abweichung der numerischen Approximation von der exakten Lösung zu sehen.
 
@@ -1267,6 +1319,29 @@ In Abbildung~\ref{fig:poly:exp} sind die exakte Lösung von \eqref{eq:numODE:exa
   \caption{Approximation der Differenzialgleichung $\ddt y = -y$; Oben: Lösung und numerischen Approximationen; Unten: Abweichung der numerischen Approximationen von der exakten Lösung (im logarithmischen Maßstab); {\color{green}Grün}: theoretische Lösung von \eqref{eq:poly}; {\color{blue}Blau}: Numerische Approximation der Lösung mit $n=8$; {\color{red}Rot}: Numerische Approximation der Lösung mit $n=10$.}
   \label{fig:poly:exp}
 \end{figure}
+Das Rauschen auf einem Fehlerniveau von ungefähr
+$10^{-7}\ldots 10^{-8}$ für $x\lessapprox1$ rührt von der
+Approximation reeller Zahlen durch Computerzahlen her. Es ist durch
+die Restriktionen der zur Programmierung verwendeten Sprache
+Postscript\texttrademark{} gegeben und damit unvermeidbar, solange man
+diese Programmiersprache benutzt.  Andere Sprachen, wie zum Besipiel
+\texttt{C++} bieten noch andere Datentypen zur Approximation von
+reellen Zahlen an, bei denen das unvermeidliche Fehlerniveau bei
+$10^{-16}$ liegt.
+
+Weiterhin ist auffällig, dass wir mit dem Maximalabstand
+$\delta\approx 1.2$ bei $n=8$ für eine Fehlerschranke $\eps=1e-5$
+ziemlich weit mit unserer Approximation kommen.
+
+Das liegt an den mit wachsendem $n$ schnell kleiner werdenden
+Koeffizienten $p_n=\frac{\alpha^n y(0)}{n!}$.  Die Fakultät $n!$
+wächst mit größer werdendem $n$ schneller als jedes Polynom. Das lässt
+den Nenner schnell wachsen und den B und den Bruch schnell kleiner werden.
+
+Zum Abschluss soll noch erwähnt werden, dass man die Differenzialgleichung
+für größere Zeitintervalle lösen kann, indem man sie nur bis 1 löst,
+dort mit dem aktuellen Wert für $y(1)$ neu startet, von 1 bis 2 löst
+und so weiter.
 \appendix
 \section{Verallgemeinerte Binomische Formel}
 \label{sec:extendedBinomial}
